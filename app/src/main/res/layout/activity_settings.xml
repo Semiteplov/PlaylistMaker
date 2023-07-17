@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF" >
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#FFFFFF"
+        android:text="@string/settings"
+        android:textColor="#1A1B22"
+        android:textSize="22sp"
+        android:textAllCaps="false"
+        android:stateListAnimator="@null"
+        android:paddingVertical="4dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        app:icon="@drawable/ic_arrow_back"
+        app:iconGravity="textStart"
+        app:iconPadding="12dp"
+        app:iconTint="#1A1B22" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="24dp"
+        android:orientation="vertical">
+
+        <Switch
+            android:layout_width="match_parent"
+            android:layout_height="61dp"
+            android:backgroundTint="#FFFFFF"
+            android:text="@string/dark_theme"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textAllCaps="false"
+            android:stateListAnimator="@null"
+            android:paddingVertical="4dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#FFFFFF"
+            android:text="@string/share_app"
+            style="@style/Widget.AppCompat.CompoundButton.Switch"
+            android:textSize="16sp"
+            android:textAlignment="textStart"
+            android:textAllCaps="false"
+            android:stateListAnimator="@null"
+            android:paddingVertical="4dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:drawableEnd="@drawable/ic_share"
+            app:iconPadding="12dp"
+            app:iconTint="#1A1B22" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#FFFFFF"
+            android:text="@string/support"
+            style="@style/Widget.AppCompat.CompoundButton.Switch"
+            android:textSize="16sp"
+            android:textAlignment="textStart"
+            android:textAllCaps="false"
+            android:stateListAnimator="@null"
+            android:paddingVertical="4dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:drawableEnd="@drawable/ic_support"
+            app:iconPadding="12dp"
+            app:iconTint="#1A1B22" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#FFFFFF"
+            android:text="@string/terms_of_use"
+            style="@style/Widget.AppCompat.CompoundButton.Switch"
+            android:textSize="16sp"
+            android:textAlignment="textStart"
+            android:textAllCaps="false"
+            android:stateListAnimator="@null"
+            android:paddingVertical="4dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:drawableEnd="@drawable/ic_arrow_forward"
+            app:iconPadding="12dp"
+            app:iconTint="#1A1B22" />
+
+    </LinearLayout>
+
+    </LinearLayout>
