@@ -49,6 +49,7 @@
             tools:ignore="UseSwitchCompatOrMaterialXml" />
 
         <Button
+            android:id="@+id/share_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#FFFFFF"
@@ -66,6 +67,7 @@
             app:iconTint="#1A1B22" />
 
         <Button
+            android:id="@+id/support_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#FFFFFF"
@@ -83,6 +85,7 @@
             app:iconTint="#1A1B22" />
 
         <Button
+            android:id="@+id/terms_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#FFFFFF"
