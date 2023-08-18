@@ -7,4 +7,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="solitude_search">#E6E8EB</color>
+    <color name="grey_icon_search">#AEAFB4</color>
+    <color name="dark_grey">#AAAAAA</color>
 </resources>

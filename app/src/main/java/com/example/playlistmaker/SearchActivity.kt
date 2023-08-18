@@ -13,8 +13,8 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        val searchEditText = findViewById<EditText>(R.id.searchEditText)
-        val clearButton = findViewById<ImageButton>(R.id.clearButton)
+        val searchEditText = findViewById<EditText>(R.id.search)
+        val clearButton = findViewById<ImageButton>(R.id.clear_button)
 
         searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
