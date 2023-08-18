@@ -8,12 +8,12 @@
     tools:context=".SearchActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbarSettings"
+        android:id="@+id/search_back_button"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:navigationIcon="@drawable/ic_arrow_back"
         app:title="@string/search"
-        app:titleTextColor="@color/black" />
+        app:titleTextColor="@color/search_back_button" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -27,7 +27,7 @@
             android:background="@drawable/custom_input"
             android:drawableStart="@drawable/ic_search_icon_search"
             android:drawablePadding="8dp"
-            android:drawableTint="@color/dark_grey"
+            android:drawableTint="@color/search_hint"
             android:ems="10"
             android:hint="@string/search"
             android:inputType="text"
@@ -35,7 +35,7 @@
             android:minHeight="48dp"
             android:padding="10dp"
             android:textColor="@color/black"
-            android:textColorHint="@color/dark_grey" />
+            android:textColorHint="@color/search_hint" />
 
         <ImageButton
             android:id="@+id/clear_button"

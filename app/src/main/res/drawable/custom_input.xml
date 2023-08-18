@@ -2,9 +2,9 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_enabled="false" android:state_focused="false">
         <shape android:shape="rectangle">
-            <solid android:color="@color/solitude_search" />
+            <solid android:color="@color/search_bar_background" />
             <corners android:radius="8dp"/>
-            <stroke android:color="@color/solitude_search" android:width="1dp"/>
+            <stroke android:color="@color/search_bar_background" android:width="1dp"/>
         </shape>
     </item>
 </selector>
