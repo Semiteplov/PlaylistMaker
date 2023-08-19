@@ -1,10 +1,12 @@
 package com.example.playlistmaker
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageButton
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.widget.doOnTextChanged
 
@@ -31,12 +33,14 @@ class SearchActivity : AppCompatActivity() {
             searchEditText?.setText(savedText)
         }
 
-        searchEditText?.doOnTextChanged { _, _, _, count ->
-            clearButton?.visibility = if (count == 0) View.GONE else View.VISIBLE
+        searchEditText?.doOnTextChanged { text, _, _, _ ->
+            savedText = text.toString()
+            clearButton?.visibility = if (text?.isEmpty() == true) View.GONE else View.VISIBLE
         }
 
         clearButton?.setOnClickListener {
             searchEditText?.text?.clear()
+            hideKeyboard()
         }
     }
 
@@ -50,5 +54,13 @@ class SearchActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
         savedText = savedInstanceState.getString(SEARCH_TEXT, "")
         searchEditText?.setText(savedText)
+    }
+
+    private fun hideKeyboard() {
+        val view = currentFocus
+        if (view != null) {
+            val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputManager.hideSoftInputFromWindow(view.windowToken, 0)
+        }
     }
 }
