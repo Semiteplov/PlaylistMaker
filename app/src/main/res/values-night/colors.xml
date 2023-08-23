@@ -5,4 +5,7 @@
     <color name="search_hint">#FF000000</color>
     <color name="search_back_button">#FFFFFFFF</color>
     <color name="back_button">#FFFFFFFF</color>
+    <color name="search_item_text">#FFFFFFFF</color>
+    <color name="search_item_title">#FFFFFFFF</color>
+    <color name="point">#FFFFFFFF</color>
 </resources>

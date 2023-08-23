@@ -15,4 +15,7 @@
     <color name="search_hint">#AAAAAA</color>
     <color name="search_back_button">#FF000000</color>
     <color name="back_button">#FF000000</color>
+    <color name="search_item_text">#AEAFB4</color>
+    <color name="search_item_title">#000000</color>
+    <color name="point">#AEAFB4</color>
 </resources>
