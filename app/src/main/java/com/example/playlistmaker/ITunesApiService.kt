@@ -3,7 +3,7 @@ package com.example.playlistmaker
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class ITunesApiService private constructor() {
+class ITunesApiService() {
 
     private val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)

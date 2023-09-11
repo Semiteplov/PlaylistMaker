@@ -1,62 +1,48 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.databinding.ActivitySearchBinding
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class SearchActivity : AppCompatActivity() {
-    private var searchEditText: EditText? = null
-    private var clearButton: ImageButton? = null
+    private lateinit var binding: ActivitySearchBinding
     private var savedText: String = ""
 
-    companion object {
-        const val SEARCH_TEXT = ""
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
+        binding = ActivitySearchBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        searchEditText = findViewById(R.id.search)
-        clearButton = findViewById(R.id.clear_button)
-        val backButton = findViewById<Toolbar>(R.id.search_back_button)
-
-        backButton.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
+        binding.searchBackButton.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
         savedInstanceState?.let {
-            savedText = it.getString(SEARCH_TEXT, "")
-            searchEditText?.setText(savedText)
+            savedText = it.getString(getString(R.string.search_text), "")
+            binding.search.setText(savedText)
         }
 
-        searchEditText?.doOnTextChanged { text, _, _, _ ->
-            savedText = text.toString()
-            clearButton?.visibility = if (text?.isEmpty() == true) View.GONE else View.VISIBLE
+        binding.search.doOnTextChanged { text, _, _, _ ->
+            binding.clearButton.visibility =
+                if (text.isNullOrEmpty()) View.INVISIBLE else View.VISIBLE
         }
 
-        clearButton?.setOnClickListener {
-            searchEditText?.text?.clear()
+        binding.clearButton.setOnClickListener {
+            binding.search.text?.clear()
             hideKeyboard()
+            hidePicture()
+            clearAdapter()
         }
-        getRecyclerView()
-    }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        savedText = searchEditText?.text.toString()
-        outState.putString(SEARCH_TEXT, savedText)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        savedText = savedInstanceState.getString(SEARCH_TEXT, "")
-        searchEditText?.setText(savedText)
+        setUpSearchButton()
+        updateData()
     }
 
     private fun hideKeyboard() {
@@ -67,17 +53,97 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun getRecyclerView(){
-        val tracks = arrayListOf(
-            Track("Smells Like Teen Spirit", "Nirvana", "5:01", "https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/7b/58/c2/7b58c21a-2b51-2bb2-e59a-9bb9b96ad8c3/00602567924166.rgb.jpg/100x100bb.jpg"),
-            Track("Billie Jean", "Michael Jackson", "4:35", "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/3d/9d/38/3d9d3811-71f0-3a0e-1ada-3004e56ff852/827969428726.jpg/100x100bb.jpg"),
-            Track("Stayin' Alive", "Bee Gees", "4:10", "https://is4-ssl.mzstatic.com/image/thumb/Music115/v4/1f/80/1f/1f801fc1-8c0f-ea3e-d3e5-387c6619619e/16UMGIM86640.rgb.jpg/100x100bb.jpg"),
-            Track("Whole Lotta Love", "Led Zeppelin", "5:33", "https://is2-ssl.mzstatic.com/image/thumb/Music62/v4/7e/17/e3/7e17e33f-2efa-2a36-e916-7f808576cf6b/mzm.fyigqcbs.jpg/100x100bb.jpg"),
-            Track("Sweet Child O'Mine", "Guns N' Roses", "5:03", "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/a0/4d/c4/a04dc484-03cc-02aa-fa82-5334fcb4bc16/18UMGIM24878.rgb.jpg/100x100bb.jpg"),
-        )
+    private fun hidePicture() {
+        binding.noTracksImage.visibility = View.INVISIBLE
+        binding.text.visibility = View.INVISIBLE
+    }
 
-        val recyclerView: RecyclerView = findViewById(R.id.track_recycler_view)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = TrackAdapter(tracks)
+    private fun clearAdapter() {
+        val adapter = TrackAdapter()
+        adapter.clear()
+        binding.trackRecyclerView.adapter = adapter
+    }
+
+    private fun setUpSearchButton() {
+        binding.search.setOnEditorActionListener { _, _, _ ->
+            clearAdapter()
+            getWebRequest()
+            false
+        }
+    }
+
+    private fun updateData() {
+        binding.updateButton.setOnClickListener { getWebRequest() }
+    }
+
+    private fun getWebRequest() {
+        val query = binding.search.text.toString().trim()
+        val apiService = ITunesApiService.instance.iTunesApi
+
+        apiService.search(query).enqueue(object : Callback<ITunesResponse> {
+            override fun onResponse(
+                call: Call<ITunesResponse>,
+                response: Response<ITunesResponse>
+            ) {
+                handleResponse(response)
+            }
+
+            override fun onFailure(call: Call<ITunesResponse>, t: Throwable) {
+                handleFailure()
+            }
+        })
+    }
+
+    private fun handleResponse(response: Response<ITunesResponse>) {
+        val trackList = response.body()?.results ?: emptyList()
+
+        if (response.isSuccessful && trackList.isNotEmpty()) {
+            binding.trackRecyclerView.visibility = View.VISIBLE
+            binding.noTracksImage.visibility = View.INVISIBLE
+            binding.updateButton.visibility = View.INVISIBLE
+            binding.text.text = ""
+
+            val trackAdapter = TrackAdapter()
+            binding.trackRecyclerView.layoutManager = LinearLayoutManager(this@SearchActivity)
+            binding.trackRecyclerView.adapter = trackAdapter
+            trackAdapter.set(trackList)
+
+        } else {
+            binding.trackRecyclerView.visibility = View.INVISIBLE
+            binding.noTracksImage.visibility = View.VISIBLE
+            binding.text.visibility = View.VISIBLE
+            binding.updateButton.visibility = View.INVISIBLE
+
+            if (response.isSuccessful) {
+                binding.text.text = getString(R.string.no_tracks)
+                binding.noTracksImage.setImageResource(
+                    if (isNightModeEnabled()) R.drawable.ic_no_tracks_dark
+                    else R.drawable.ic_no_tracks
+                )
+            } else {
+                binding.text.text = getString(R.string.network_error)
+                binding.noTracksImage.setImageResource(
+                    if (isNightModeEnabled()) R.drawable.ic_network_error_dark
+                    else R.drawable.ic_network_error
+                )
+            }
+        }
+    }
+
+    private fun handleFailure() {
+        binding.trackRecyclerView.visibility = View.INVISIBLE
+        binding.noTracksImage.visibility = View.VISIBLE
+        binding.text.visibility = View.VISIBLE
+        binding.updateButton.visibility = View.VISIBLE
+        binding.text.text = getString(R.string.network_error)
+        binding.noTracksImage.setImageResource(
+            if (isNightModeEnabled()) R.drawable.ic_network_error_dark
+            else R.drawable.ic_network_error
+        )
+    }
+
+    private fun isNightModeEnabled(): Boolean {
+        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        return currentNightMode == Configuration.UI_MODE_NIGHT_YES
     }
 }
