@@ -14,35 +14,34 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class SearchActivity : AppCompatActivity() {
-    private lateinit var binding: ActivitySearchBinding
+    private val binding by lazy { ActivitySearchBinding.inflate(layoutInflater) }
     private var savedText: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.searchBackButton.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
+        setupUI(savedInstanceState)
+        updateData()
+    }
 
+    private fun setupUI(savedInstanceState: Bundle?) {
+        binding.searchBackButton.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
         savedInstanceState?.let {
             savedText = it.getString(getString(R.string.search_text), "")
             binding.search.setText(savedText)
         }
-
         binding.search.doOnTextChanged { text, _, _, _ ->
             binding.clearButton.visibility =
                 if (text.isNullOrEmpty()) View.INVISIBLE else View.VISIBLE
         }
-
         binding.clearButton.setOnClickListener {
             binding.search.text?.clear()
             hideKeyboard()
             hidePicture()
             clearAdapter()
         }
-
         setUpSearchButton()
-        updateData()
     }
 
     private fun hideKeyboard() {
@@ -79,7 +78,6 @@ class SearchActivity : AppCompatActivity() {
     private fun getWebRequest() {
         val query = binding.search.text.toString().trim()
         val apiService = ITunesApiService.instance.iTunesApi
-
         apiService.search(query).enqueue(object : Callback<ITunesResponse> {
             override fun onResponse(
                 call: Call<ITunesResponse>,
@@ -96,35 +94,42 @@ class SearchActivity : AppCompatActivity() {
 
     private fun handleResponse(response: Response<ITunesResponse>) {
         val trackList = response.body()?.results ?: emptyList()
-
         if (response.isSuccessful && trackList.isNotEmpty()) {
-            binding.trackRecyclerView.visibility = View.VISIBLE
-            binding.noTracksImage.visibility = View.INVISIBLE
-            binding.updateButton.visibility = View.INVISIBLE
-            binding.text.text = ""
-
-            val trackAdapter = TrackAdapter()
-            binding.trackRecyclerView.layoutManager = LinearLayoutManager(this@SearchActivity)
-            binding.trackRecyclerView.adapter = trackAdapter
-            trackAdapter.set(trackList)
-
+            displayTracks(trackList)
         } else {
-            binding.trackRecyclerView.visibility = View.INVISIBLE
-            binding.noTracksImage.visibility = View.VISIBLE
-            binding.text.visibility = View.VISIBLE
-            binding.updateButton.visibility = View.INVISIBLE
+            displayError(response)
+        }
+    }
+
+    private fun displayTracks(trackList: List<Track>) {
+        binding.apply {
+            trackRecyclerView.visibility = View.VISIBLE
+            noTracksImage.visibility = View.INVISIBLE
+            updateButton.visibility = View.INVISIBLE
+            text.text = ""
+            trackRecyclerView.layoutManager = LinearLayoutManager(this@SearchActivity)
+            trackRecyclerView.adapter = TrackAdapter().apply {
+                set(trackList)
+            }
+        }
+    }
+
+    private fun displayError(response: Response<ITunesResponse>) {
+        binding.apply {
+            trackRecyclerView.visibility = View.INVISIBLE
+            noTracksImage.visibility = View.VISIBLE
+            text.visibility = View.VISIBLE
+            updateButton.visibility = View.INVISIBLE
 
             if (response.isSuccessful) {
-                binding.text.text = getString(R.string.no_tracks)
-                binding.noTracksImage.setImageResource(
-                    if (isNightModeEnabled()) R.drawable.ic_no_tracks_dark
-                    else R.drawable.ic_no_tracks
+                text.text = getString(R.string.no_tracks)
+                noTracksImage.setImageResource(
+                    if (isNightModeEnabled()) R.drawable.ic_no_tracks_dark else R.drawable.ic_no_tracks
                 )
             } else {
-                binding.text.text = getString(R.string.network_error)
-                binding.noTracksImage.setImageResource(
-                    if (isNightModeEnabled()) R.drawable.ic_network_error_dark
-                    else R.drawable.ic_network_error
+                text.text = getString(R.string.network_error)
+                noTracksImage.setImageResource(
+                    if (isNightModeEnabled()) R.drawable.ic_network_error_dark else R.drawable.ic_network_error
                 )
             }
         }
