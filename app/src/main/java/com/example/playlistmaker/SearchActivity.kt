@@ -22,7 +22,7 @@ class SearchActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupUI(savedInstanceState)
-        updateData()
+        setUpUpdateButton()
     }
 
     private fun setupUI(savedInstanceState: Bundle?) {
@@ -66,17 +66,20 @@ class SearchActivity : AppCompatActivity() {
     private fun setUpSearchButton() {
         binding.search.setOnEditorActionListener { _, _, _ ->
             clearAdapter()
-            getWebRequest()
+            getWebRequest(binding.search.text.toString().trim())
             false
         }
     }
 
-    private fun updateData() {
-        binding.updateButton.setOnClickListener { getWebRequest() }
+    private fun setUpUpdateButton() {
+        binding.updateButton.setOnClickListener {
+            getWebRequest(
+                binding.search.text.toString().trim()
+            )
+        }
     }
 
-    private fun getWebRequest() {
-        val query = binding.search.text.toString().trim()
+    private fun getWebRequest(query: String) {
         val apiService = ITunesApiService.instance.iTunesApi
         apiService.search(query).enqueue(object : Callback<ITunesResponse> {
             override fun onResponse(
@@ -93,7 +96,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun handleResponse(response: Response<ITunesResponse>) {
-        val trackList = response.body()?.results ?: emptyList()
+        val trackList = response.body()?.results.orEmpty()
         if (response.isSuccessful && trackList.isNotEmpty()) {
             displayTracks(trackList)
         } else {
@@ -136,15 +139,17 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun handleFailure() {
-        binding.trackRecyclerView.visibility = View.INVISIBLE
-        binding.noTracksImage.visibility = View.VISIBLE
-        binding.text.visibility = View.VISIBLE
-        binding.updateButton.visibility = View.VISIBLE
-        binding.text.text = getString(R.string.network_error)
-        binding.noTracksImage.setImageResource(
-            if (isNightModeEnabled()) R.drawable.ic_network_error_dark
-            else R.drawable.ic_network_error
-        )
+        with(binding) {
+            trackRecyclerView.visibility = View.INVISIBLE
+            noTracksImage.visibility = View.VISIBLE
+            text.visibility = View.VISIBLE
+            updateButton.visibility = View.VISIBLE
+            text.text = getString(R.string.network_error)
+            noTracksImage.setImageResource(
+                if (isNightModeEnabled()) R.drawable.ic_network_error_dark
+                else R.drawable.ic_network_error
+            )
+        }
     }
 
     private fun isNightModeEnabled(): Boolean {

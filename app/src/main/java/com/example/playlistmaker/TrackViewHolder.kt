@@ -17,9 +17,11 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val trackTime: TextView = itemView.findViewById(R.id.track_time)
     private val artworkImage: ImageView = itemView.findViewById(R.id.artwork_image)
 
-    fun bind(track: Track) {
-        val radiusCorners = 2.0f
+    private companion object {
+        const val radiusCorners = 2.0f
+    }
 
+    fun bind(track: Track) {
         val requestOptions = RequestOptions()
             .placeholder(R.drawable.placeholder)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
