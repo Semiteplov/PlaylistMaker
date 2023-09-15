@@ -37,6 +37,7 @@ class SearchActivity : AppCompatActivity() {
         }
         binding.clearButton.setOnClickListener {
             binding.search.text?.clear()
+            binding.updateButton.visibility = View.INVISIBLE
             hideKeyboard()
             hidePicture()
             clearAdapter()

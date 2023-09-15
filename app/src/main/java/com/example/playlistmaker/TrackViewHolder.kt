@@ -18,7 +18,7 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val artworkImage: ImageView = itemView.findViewById(R.id.artwork_image)
 
     private companion object {
-        const val radiusCorners = 2.0f
+        private const val RADIUS_CORNER = 2.0f
     }
 
     fun bind(track: Track) {
@@ -33,7 +33,7 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             .applyDefaultRequestOptions(requestOptions)
             .load(track.artworkUrl100)
             .placeholder(R.drawable.placeholder)
-            .transform(RoundedCorners(dpToPx(radiusCorners, itemView.context)))
+            .transform(RoundedCorners(dpToPx(RADIUS_CORNER, itemView.context)))
             .into(artworkImage)
     }
 
