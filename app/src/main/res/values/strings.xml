@@ -9,4 +9,8 @@
     <string name="support">Написать в поддержку</string>
     <string name="terms_of_use">Пользовательское соглашение</string>
     <string name="track_image">Track Image</string>
+    <string name="search_text">Search Text</string>
+    <string name="update">Обновить</string>
+    <string name="network_error">Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="no_tracks">Ничего не нашлось</string>
 </resources>
