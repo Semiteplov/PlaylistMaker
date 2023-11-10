@@ -9,4 +9,5 @@
     <dimen name="button_icon_padding">12dp</dimen>
     <dimen name="recycler_view_margin">8dp</dimen>
     <dimen name="error_image_layout_size">120dp</dimen>
+    <dimen name="padding_normal">22dp</dimen>
 </resources>
