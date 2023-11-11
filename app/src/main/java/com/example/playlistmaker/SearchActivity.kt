@@ -6,6 +6,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,18 +31,24 @@ class SearchActivity : AppCompatActivity() {
         sharedPreferences = getSharedPreferences(SAVED_HISTORY, Context.MODE_PRIVATE)
         searchHistory = SearchHistory(sharedPreferences)
 
-        adapter = TrackAdapter(searchHistory)
-        historySearchAdapter = TrackAdapter(searchHistory)
+        adapter = TrackAdapter(searchHistory) { track ->
+            searchHistory.writeSearchHistory(track)
+            Toast.makeText(this, "Трек сохранен в истории", Toast.LENGTH_SHORT).show()
+        }
+        historySearchAdapter = TrackAdapter(searchHistory) { track ->
+            searchHistory.writeSearchHistory(track)
+            Toast.makeText(this, "Трек сохранен в истории", Toast.LENGTH_SHORT).show()
+        }
 
         setupUI(savedInstanceState)
         setUpUpdateButton()
 
         binding.historyRecyclerView.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+            LinearLayoutManager(this)
         binding.historyRecyclerView.adapter = historySearchAdapter
 
         binding.trackRecyclerView.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+            LinearLayoutManager(this)
         binding.trackRecyclerView.adapter = adapter
 
         val trackListHistory = sharedPreferences.getString(SearchHistory.KEY_SEARCH_HISTORY, null)
@@ -62,6 +69,8 @@ class SearchActivity : AppCompatActivity() {
         binding.clearHistoryButton.setOnClickListener {
             searchHistory.clearSearchHistory()
             historySearchAdapter.clear()
+            binding.historyViewSearch.visibility = View.GONE
+            binding.clearHistoryButton.visibility = View.GONE
             historySearchAdapter.notifyDataSetChanged()
         }
 
@@ -112,16 +121,15 @@ class SearchActivity : AppCompatActivity() {
             if (searchHistory.readSearchHistory().isEmpty()) {
                 binding.historyViewSearch.visibility = View.GONE
                 binding.clearHistoryButton.visibility = View.GONE
+            } else {
+                binding.historyViewSearch.visibility = View.VISIBLE
+                binding.clearHistoryButton.visibility = View.VISIBLE
             }
             binding.historyRecyclerView.visibility = View.VISIBLE
             binding.noTracksImage.visibility = View.GONE
             binding.text.visibility = View.GONE
         }
         setUpSearchButton()
-        binding.clearHistoryButton.setOnClickListener {
-            binding.historyViewSearch.visibility = View.GONE
-            binding.clearHistoryButton.visibility = View.GONE
-        }
     }
 
     private fun hideKeyboard() {
@@ -138,9 +146,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun clearAdapter() {
-        val adapter = TrackAdapter(searchHistory)
-        adapter.clear()
-        binding.trackRecyclerView.adapter = adapter
+        adapter.updateTracks(emptyList())
     }
 
     private fun setUpSearchButton() {
@@ -190,10 +196,7 @@ class SearchActivity : AppCompatActivity() {
             noTracksImage.visibility = View.INVISIBLE
             updateButton.visibility = View.INVISIBLE
             text.text = ""
-            trackRecyclerView.layoutManager = LinearLayoutManager(this@SearchActivity)
-            trackRecyclerView.adapter = TrackAdapter(searchHistory).apply {
-                set(trackList)
-            }
+            adapter.updateTracks(trackList)
         }
     }
 

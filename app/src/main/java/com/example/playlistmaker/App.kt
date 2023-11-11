@@ -11,13 +11,13 @@ class App : Application() {
     }
 
     var isDarkThemeEnabled = false
-    private lateinit var sharedPrefs: SharedPreferences
+    private val sharedPrefs: SharedPreferences by lazy {
+        getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE)
+    }
 
     override fun onCreate() {
         super.onCreate()
-
-        sharedPrefs = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE)
-        switchTheme(sharedPrefs.getBoolean(DARK_THEME_ENABLED, false))
+        setAppThemeOnAppStart()
     }
 
     fun switchTheme(darkThemeEnabled: Boolean) {
@@ -32,4 +32,8 @@ class App : Application() {
         AppCompatDelegate.setDefaultNightMode(mode)
     }
 
+    private fun setAppThemeOnAppStart() {
+        isDarkThemeEnabled  = sharedPrefs.getBoolean(DARK_THEME_ENABLED, false)
+        switchTheme(isDarkThemeEnabled )
+    }
 }
