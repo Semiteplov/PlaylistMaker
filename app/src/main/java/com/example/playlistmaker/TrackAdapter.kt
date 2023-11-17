@@ -1,13 +1,22 @@
 package com.example.playlistmaker
 
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 
 class TrackAdapter(
-    private val searchHistory: SearchHistory, private val onTrackClickListener: (Track) -> Unit
+    private val context: Context,
+    private val sharedPreferences: SharedPreferences,
+    private val onTrackClickListener: (Track) -> Unit
 ) : RecyclerView.Adapter<TrackViewHolder>() {
+
     var tracks: List<Track> = emptyList()
+    private val newTrackKey = "new_track"
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view =
@@ -20,7 +29,13 @@ class TrackAdapter(
 
         holder.bind(track)
         holder.itemView.setOnClickListener {
+            write(track)
             onTrackClickListener(track)
+            val trackJson = Gson().toJson(track)
+            val intent = Intent(context, MediaActivity::class.java).apply {
+                putExtra("key", trackJson)
+            }
+            context.startActivity(intent)
         }
     }
 
@@ -37,5 +52,11 @@ class TrackAdapter(
     fun updateTracks(newTracks: List<Track>) {
         tracks = newTracks
         notifyDataSetChanged()
+    }
+
+    private fun write(track: Track) {
+        sharedPreferences.edit()
+            .putString(newTrackKey, Gson().toJson(track))
+            .apply()
     }
 }

@@ -2,7 +2,6 @@ package com.example.playlistmaker
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -31,11 +30,11 @@ class SearchActivity : AppCompatActivity() {
         sharedPreferences = getSharedPreferences(SAVED_HISTORY, Context.MODE_PRIVATE)
         searchHistory = SearchHistory(sharedPreferences)
 
-        adapter = TrackAdapter(searchHistory) { track ->
+        adapter = TrackAdapter(this, sharedPreferences) { track ->
             searchHistory.writeSearchHistory(track)
             Toast.makeText(this, "Трек сохранен в истории", Toast.LENGTH_SHORT).show()
         }
-        historySearchAdapter = TrackAdapter(searchHistory) { track ->
+        historySearchAdapter = TrackAdapter(this, sharedPreferences) { track ->
             searchHistory.writeSearchHistory(track)
             Toast.makeText(this, "Трек сохранен в истории", Toast.LENGTH_SHORT).show()
         }
@@ -209,14 +208,10 @@ class SearchActivity : AppCompatActivity() {
 
             if (response.isSuccessful) {
                 text.text = getString(R.string.no_tracks)
-                noTracksImage.setImageResource(
-                    if (isNightModeEnabled()) R.drawable.ic_no_tracks_dark else R.drawable.ic_no_tracks
-                )
+                noTracksImage.setImageResource(R.drawable.ic_no_tracks)
             } else {
                 text.text = getString(R.string.network_error)
-                noTracksImage.setImageResource(
-                    if (isNightModeEnabled()) R.drawable.ic_network_error_dark else R.drawable.ic_network_error
-                )
+                noTracksImage.setImageResource(R.drawable.ic_network_error)
             }
         }
     }
@@ -228,16 +223,8 @@ class SearchActivity : AppCompatActivity() {
             text.visibility = View.VISIBLE
             updateButton.visibility = View.VISIBLE
             text.text = getString(R.string.network_error)
-            noTracksImage.setImageResource(
-                if (isNightModeEnabled()) R.drawable.ic_network_error_dark
-                else R.drawable.ic_network_error
-            )
+            noTracksImage.setImageResource(R.drawable.ic_network_error)
         }
-    }
-
-    private fun isNightModeEnabled(): Boolean {
-        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        return currentNightMode == Configuration.UI_MODE_NIGHT_YES
     }
 
     private fun clearButtonVisibility(text: CharSequence?): Int {

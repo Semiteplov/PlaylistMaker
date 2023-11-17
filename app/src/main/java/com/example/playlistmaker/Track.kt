@@ -18,9 +18,25 @@ data class Track(
     val artworkUrl100: String,
 
     @SerializedName("trackId")
-    val trackId: Long
+    val trackId: Long,
+
+    @SerializedName("primaryGenreName")
+    val primaryGenreName: String,
+
+    @SerializedName("collectionName")
+    val collectionName: String,
+
+    @SerializedName("country")
+    val country: String,
+
+    @SerializedName("releaseDate")
+    val releaseDate: String,
 ) {
     fun getFormattedTime(): String {
         return SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis)
     }
+
+    fun getYearFromReleaseDate(): String = releaseDate.substring(0, 4)
+
+    fun getImageNeedSize(): String = artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
 }
