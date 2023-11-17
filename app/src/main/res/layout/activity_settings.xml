@@ -7,41 +7,24 @@
     android:background="?attr/colorOnPrimary"
     tools:context=".SettingsActivity">
 
-    <Button
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/back_button"
-        style="@style/WrapContentLayoutStyle"
-        android:backgroundTint="?attr/colorOnPrimary"
-        android:text="@string/settings"
-        android:textColor="?attr/colorOnSecondary"
-        android:textSize="@dimen/primary_text_size"
-        android:textAllCaps="false"
-        android:stateListAnimator="@null"
-        android:paddingVertical="4dp"
-        android:paddingHorizontal="12dp"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
-        android:fontFamily="@font/ys_text_medium"
-        app:icon="@drawable/ic_arrow_back"
-        app:iconGravity="textStart"
-        app:iconPadding="@dimen/button_icon_padding"
-        app:iconTint="?attr/colorOnSecondary" />
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:title="@string/settings"
+        app:titleTextColor="@color/search_back_button" />
 
     <LinearLayout
         style="@style/VerticalLinearLayoutStyle">
 
-        <Switch
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:backgroundTint="@color/white"
-            android:fontFamily="@font/ys_text_regular"
-            android:paddingHorizontal="@dimen/horizontal_padding"
-            android:paddingVertical="@dimen/vertical_padding"
-            android:stateListAnimator="@null"
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            style="@style/SettingsButtonStyle"
+            android:id="@+id/theme_switcher"
             android:text="@string/dark_theme"
-            android:textAllCaps="false"
-            android:textColor="?attr/colorOnSecondary"
-            android:textSize="@dimen/button_text_size"
-            tools:ignore="UseSwitchCompatOrMaterialXml" />
+            android:layout_gravity="start"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"/>
 
         <Button
             android:id="@+id/support_button"

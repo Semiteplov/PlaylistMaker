@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:background="#3772E7"
+    android:background="?attr/colorPrimaryDark"
     android:padding="16dp"
     tools:context=".MainActivity">
 
@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="start"
         android:text="@string/playlist_maker"
-        android:textColor="#ffffff"
+        android:textColor="@color/white"
         android:textSize="26sp" />
 
     <LinearLayout
