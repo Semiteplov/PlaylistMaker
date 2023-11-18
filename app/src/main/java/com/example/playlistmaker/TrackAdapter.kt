@@ -1,22 +1,22 @@
 package com.example.playlistmaker
 
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 
 class TrackAdapter(
-    private val context: Context,
     private val sharedPreferences: SharedPreferences,
     private val onTrackClickListener: (Track) -> Unit
 ) : RecyclerView.Adapter<TrackViewHolder>() {
+    companion object {
+        const val NEW_TRACK_KEY = "new_track"
+    }
 
     var tracks: List<Track> = emptyList()
-    private val newTrackKey = "new_track"
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view =
@@ -32,10 +32,10 @@ class TrackAdapter(
             write(track)
             onTrackClickListener(track)
             val trackJson = Gson().toJson(track)
-            val intent = Intent(context, MediaActivity::class.java).apply {
+            val intent = Intent(holder.itemView.context, MediaActivity::class.java).apply {
                 putExtra("key", trackJson)
             }
-            context.startActivity(intent)
+            holder.itemView.context.startActivity(intent)
         }
     }
 
@@ -50,13 +50,34 @@ class TrackAdapter(
     }
 
     fun updateTracks(newTracks: List<Track>) {
+        val diffCallback = TrackDiffCallback(tracks, newTracks)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+
         tracks = newTracks
+        diffResult.dispatchUpdatesTo(this)
         notifyDataSetChanged()
     }
 
     private fun write(track: Track) {
         sharedPreferences.edit()
-            .putString(newTrackKey, Gson().toJson(track))
+            .putString(NEW_TRACK_KEY, Gson().toJson(track))
             .apply()
+    }
+}
+
+class TrackDiffCallback(
+    private val oldList: List<Track>,
+    private val newList: List<Track>
+) : DiffUtil.Callback() {
+    override fun getOldListSize(): Int = oldList.size
+
+    override fun getNewListSize(): Int = newList.size
+
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldList[oldItemPosition].trackId == newList[newItemPosition].trackId
+    }
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldList[oldItemPosition] == newList[newItemPosition]
     }
 }

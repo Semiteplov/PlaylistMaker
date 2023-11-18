@@ -11,30 +11,33 @@ import com.bumptech.glide.request.RequestOptions
 
 private const val BORDER_RADIUS = 2.0f
 
-object ImageLoader {
-    fun loadTrackImage(context: Context, view: ImageView, track: Track, useLargeImage: Boolean) {
-        Glide.with(context)
-            .load(track.getImageNeedSize())
-            .apply(getRequestOptions(useLargeImage))
-            .transform(CenterCrop(), RoundedCorners(dpToPx(BORDER_RADIUS, context)))
-            .into(view)
-    }
+fun ImageView.loadTrackImage(
+    context: Context,
+    view: ImageView,
+    track: Track,
+    useLargeImage: Boolean
+) {
+    Glide.with(context)
+        .load(track.getImageNeedSize())
+        .apply(getRequestOptions(useLargeImage))
+        .transform(CenterCrop(), RoundedCorners(dpToPx(BORDER_RADIUS, context)))
+        .into(view)
+}
 
-    private fun getRequestOptions(useLargeImage: Boolean): RequestOptions {
-        return if (useLargeImage) {
-            RequestOptions()
-                .placeholder(R.drawable.placeholder)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-        } else {
-            RequestOptions()
-                .placeholder(R.drawable.placeholder)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-        }
+private fun getRequestOptions(useLargeImage: Boolean): RequestOptions {
+    return if (useLargeImage) {
+        RequestOptions()
+            .placeholder(R.drawable.placeholder)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+    } else {
+        RequestOptions()
+            .placeholder(R.drawable.placeholder)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
     }
+}
 
-    private fun dpToPx(dp: Float, context: Context): Int {
-        return TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP, dp, context.resources.displayMetrics
-        ).toInt()
-    }
+private fun dpToPx(dp: Float, context: Context): Int {
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP, dp, context.resources.displayMetrics
+    ).toInt()
 }

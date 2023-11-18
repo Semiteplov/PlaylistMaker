@@ -12,19 +12,29 @@ class MediaActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMediaBinding.inflate(layoutInflater).apply {
-            setContentView(root)
-            toolbarMedia.setNavigationOnClickListener { onBackPressed() }
-            ibLike.setOnClickListener {
-                ibLike.setImageResource(R.drawable.ic_like)
-                Toast.makeText(
-                    this@MediaActivity,
-                    getString(R.string.playlist_created),
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
+        initializeUI()
+        setListeners()
+        processIntentData()
+    }
 
+    private fun initializeUI() {
+        binding = ActivityMediaBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+    }
+
+    private fun setListeners() {
+        binding.toolbarMedia.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
+        binding.ibLike.setOnClickListener {
+            binding.ibLike.setImageResource(R.drawable.ic_like)
+            Toast.makeText(
+                this,
+                getString(R.string.playlist_created),
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+    private fun processIntentData() {
         intent.getStringExtra("key")?.let { json ->
             Gson().fromJson(json, Track::class.java)?.let { track ->
                 setUIData(track)
@@ -47,7 +57,7 @@ class MediaActivity : AppCompatActivity() {
             tvYearValue.text = track.getYearFromReleaseDate()
             tvDurationValue.text = track.getFormattedTime().replaceFirst("0", "")
             tvGenreValue.text = track.primaryGenreName
-            ImageLoader.loadTrackImage(this@MediaActivity, ivMain, track, true)
+            ivMain.loadTrackImage(this@MediaActivity, ivMain, track, true)
             tvTimeTrack.text = track.getFormattedTime().replaceFirst("0", "")
         }
     }

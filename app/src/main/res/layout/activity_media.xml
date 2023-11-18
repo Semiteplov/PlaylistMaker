@@ -7,10 +7,10 @@
     tools:context=".MediaActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbarMedia"
+        android:id="@+id/toolbar_media"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineLeft"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_left"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -18,21 +18,21 @@
         app:titleTextColor="@color/back_button" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineLeft"
+        android:id="@+id/guideline_left"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineRight"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_right"
         app:layout_constraintGuide_begin="24dp"
-        app:layout_constraintTop_toBottomOf="@+id/toolbarMedia" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_media" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineRight"
+        android:id="@+id/guideline_right"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_end="24dp"
-        app:layout_constraintTop_toBottomOf="@+id/guidelineLeft" />
+        app:layout_constraintTop_toBottomOf="@+id/guideline_left" />
 
     <ImageView
         android:id="@+id/iv_main"
@@ -44,9 +44,9 @@
         android:src="@drawable/placeholder"
         app:layout_constraintBottom_toTopOf="@+id/tv_track_name"
         app:layout_constraintDimensionRatio="h,16:16"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineRight"
-        app:layout_constraintStart_toStartOf="@+id/guidelineLeft"
-        app:layout_constraintTop_toBottomOf="@+id/toolbarMedia" />
+        app:layout_constraintEnd_toStartOf="@+id/guideline_right"
+        app:layout_constraintStart_toStartOf="@+id/guideline_left"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_media" />
 
     <TextView
         android:id="@+id/tv_track_name"
@@ -59,9 +59,9 @@
         android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/tv_artist_name"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineRight"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_right"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/guidelineLeft" />
+        app:layout_constraintStart_toStartOf="@+id/guideline_left" />
 
     <TextView
         android:id="@+id/tv_artist_name"
@@ -73,7 +73,7 @@
         android:textColor="@color/primary_text"
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@+id/ib_play"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineRight"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_right"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/tv_track_name" />
 
@@ -84,8 +84,8 @@
         android:background="@null"
         android:src="@drawable/ic_play_button"
         app:layout_constraintBottom_toTopOf="@+id/tv_time_track"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineRight"
-        app:layout_constraintStart_toStartOf="@+id/guidelineLeft" />
+        app:layout_constraintEnd_toStartOf="@+id/guideline_right"
+        app:layout_constraintStart_toStartOf="@+id/guideline_left" />
 
     <ImageView
         android:id="@+id/ib_share"
@@ -94,7 +94,7 @@
         android:background="@null"
         android:src="@drawable/ic_add_to_playlist"
         app:layout_constraintBottom_toBottomOf="@+id/ib_play"
-        app:layout_constraintStart_toStartOf="@+id/guidelineLeft"
+        app:layout_constraintStart_toStartOf="@+id/guideline_left"
         app:layout_constraintTop_toTopOf="@+id/ib_play" />
 
 
@@ -105,7 +105,7 @@
         android:background="@null"
         android:src="@drawable/ic_like"
         app:layout_constraintBottom_toBottomOf="@+id/ib_play"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineRight"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_right"
         app:layout_constraintTop_toTopOf="@+id/ib_play" />
 
     <TextView
@@ -117,13 +117,13 @@
         android:textColor="@color/primary_text"
         android:textSize="14sp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/tvDuration"
+        app:layout_constraintBottom_toTopOf="@+id/tv_duration"
         app:layout_constraintEnd_toEndOf="@+id/ib_play"
         app:layout_constraintHorizontal_bias="0.473"
         app:layout_constraintStart_toStartOf="@+id/ib_play" />
 
     <TextView
-        android:id="@+id/tvCountry"
+        android:id="@+id/tv_country"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="28dp"
@@ -131,44 +131,44 @@
         android:text="@string/country"
         android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/tvGenre"
+        app:layout_constraintStart_toStartOf="@+id/tv_genre"
         app:layout_constraintVertical_chainStyle="spread_inside" />
 
     <TextView
-        android:id="@+id/tvGenre"
+        android:id="@+id/tv_genre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="17dp"
         android:fontFamily="@font/ys_display_regular"
         android:text="@string/genre"
         android:textSize="13sp"
-        app:layout_constraintBottom_toTopOf="@+id/tvCountry"
-        app:layout_constraintStart_toStartOf="@+id/tvYear" />
+        app:layout_constraintBottom_toTopOf="@+id/tv_country"
+        app:layout_constraintStart_toStartOf="@+id/tv_year" />
 
     <TextView
-        android:id="@+id/tvYear"
+        android:id="@+id/tv_year"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="17dp"
         android:fontFamily="@font/ys_display_regular"
         android:text="@string/year"
         android:textSize="13sp"
-        app:layout_constraintBottom_toTopOf="@+id/tvGenre"
-        app:layout_constraintStart_toStartOf="@+id/tvAlbum" />
+        app:layout_constraintBottom_toTopOf="@+id/tv_genre"
+        app:layout_constraintStart_toStartOf="@+id/tv_album" />
 
     <TextView
-        android:id="@+id/tvAlbum"
+        android:id="@+id/tv_album"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="17dp"
         android:fontFamily="@font/ys_display_regular"
         android:text="@string/album"
         android:textSize="13sp"
-        app:layout_constraintBottom_toTopOf="@+id/tvYear"
-        app:layout_constraintStart_toStartOf="@+id/tvDuration" />
+        app:layout_constraintBottom_toTopOf="@+id/tv_year"
+        app:layout_constraintStart_toStartOf="@+id/tv_duration" />
 
     <TextView
-        android:id="@+id/tvDuration"
+        android:id="@+id/tv_duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -176,12 +176,12 @@
         android:fontFamily="@font/ys_display_regular"
         android:text="@string/duration"
         android:textSize="13sp"
-        app:layout_constraintBottom_toTopOf="@+id/tvAlbum"
+        app:layout_constraintBottom_toTopOf="@+id/tv_album"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintVertical_chainStyle="spread_inside" />
 
     <TextView
-        android:id="@+id/tvCountryValue"
+        android:id="@+id/tv_country_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="28dp"
@@ -190,10 +190,10 @@
         android:textColor="@color/primary_text"
         android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/tvGenreValue" />
+        app:layout_constraintEnd_toEndOf="@+id/tv_genre_value" />
 
     <TextView
-        android:id="@+id/tvGenreValue"
+        android:id="@+id/tv_genre_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="17dp"
@@ -201,11 +201,11 @@
         android:text="@string/genre"
         android:textColor="@color/primary_text"
         android:textSize="13sp"
-        app:layout_constraintBottom_toTopOf="@+id/tvCountryValue"
-        app:layout_constraintEnd_toEndOf="@+id/tvYearValue" />
+        app:layout_constraintBottom_toTopOf="@+id/tv_country_value"
+        app:layout_constraintEnd_toEndOf="@+id/tv_year_value" />
 
     <TextView
-        android:id="@+id/tvYearValue"
+        android:id="@+id/tv_year_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="17dp"
@@ -213,11 +213,11 @@
         android:text="@string/year"
         android:textColor="@color/primary_text"
         android:textSize="13sp"
-        app:layout_constraintBottom_toTopOf="@+id/tvGenreValue"
-        app:layout_constraintEnd_toEndOf="@+id/tvAlbumValue" />
+        app:layout_constraintBottom_toTopOf="@+id/tv_genre_value"
+        app:layout_constraintEnd_toEndOf="@+id/tv_album_value" />
 
     <TextView
-        android:id="@+id/tvAlbumValue"
+        android:id="@+id/tv_album_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="17dp"
@@ -228,11 +228,11 @@
         android:text="@string/album"
         android:textColor="@color/primary_text"
         android:textSize="13sp"
-        app:layout_constraintBottom_toTopOf="@+id/tvYearValue"
-        app:layout_constraintEnd_toEndOf="@+id/tvDurationValue" />
+        app:layout_constraintBottom_toTopOf="@+id/tv_year_value"
+        app:layout_constraintEnd_toEndOf="@+id/tv_duration_value" />
 
     <TextView
-        android:id="@+id/tvDurationValue"
+        android:id="@+id/tv_duration_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
@@ -241,7 +241,7 @@
         android:text="@string/duration"
         android:textColor="@color/primary_text"
         android:textSize="13sp"
-        app:layout_constraintBottom_toTopOf="@+id/tvAlbumValue"
+        app:layout_constraintBottom_toTopOf="@+id/tv_album_value"
         app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -30,11 +30,11 @@ class SearchActivity : AppCompatActivity() {
         sharedPreferences = getSharedPreferences(SAVED_HISTORY, Context.MODE_PRIVATE)
         searchHistory = SearchHistory(sharedPreferences)
 
-        adapter = TrackAdapter(this, sharedPreferences) { track ->
+        adapter = TrackAdapter(sharedPreferences) { track ->
             searchHistory.writeSearchHistory(track)
             Toast.makeText(this, "Трек сохранен в истории", Toast.LENGTH_SHORT).show()
         }
-        historySearchAdapter = TrackAdapter(this, sharedPreferences) { track ->
+        historySearchAdapter = TrackAdapter(sharedPreferences) { track ->
             searchHistory.writeSearchHistory(track)
             Toast.makeText(this, "Трек сохранен в истории", Toast.LENGTH_SHORT).show()
         }
