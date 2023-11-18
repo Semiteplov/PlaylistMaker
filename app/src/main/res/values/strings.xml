@@ -15,4 +15,13 @@
     <string name="no_tracks">Ничего не нашлось</string>
     <string name="clear_history">Очистить историю</string>
     <string name="you_were_looking_for">Вы искали</string>
+    <string name="track_name">Название трека</string>
+    <string name="country">Страна</string>
+    <string name="genre">Жанр</string>
+    <string name="year">Год</string>
+    <string name="album">Альбом</string>
+    <string name="duration">Длительность</string>
+    <string name="artist_name">Имя артиста</string>
+    <string name="track_time">trackTime</string>
+    <string name="playlist_created">Плэйлист создан</string>
 </resources>
