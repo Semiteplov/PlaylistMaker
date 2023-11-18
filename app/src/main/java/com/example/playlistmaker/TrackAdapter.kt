@@ -1,7 +1,6 @@
 package com.example.playlistmaker
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -9,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 
 class TrackAdapter(
-    private val sharedPreferences: SharedPreferences,
+    private val saveTrack: (Track) -> Unit,
     private val onTrackClickListener: (Track) -> Unit
 ) : RecyclerView.Adapter<TrackViewHolder>() {
     companion object {
@@ -29,7 +28,7 @@ class TrackAdapter(
 
         holder.bind(track)
         holder.itemView.setOnClickListener {
-            write(track)
+            saveTrack(track)
             onTrackClickListener(track)
             val trackJson = Gson().toJson(track)
             val intent = Intent(holder.itemView.context, MediaActivity::class.java).apply {
@@ -56,12 +55,6 @@ class TrackAdapter(
         tracks = newTracks
         diffResult.dispatchUpdatesTo(this)
         notifyDataSetChanged()
-    }
-
-    private fun write(track: Track) {
-        sharedPreferences.edit()
-            .putString(NEW_TRACK_KEY, Gson().toJson(track))
-            .apply()
     }
 }
 

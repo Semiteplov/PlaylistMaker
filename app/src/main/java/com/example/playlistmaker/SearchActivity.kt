@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -30,11 +31,11 @@ class SearchActivity : AppCompatActivity() {
         sharedPreferences = getSharedPreferences(SAVED_HISTORY, Context.MODE_PRIVATE)
         searchHistory = SearchHistory(sharedPreferences)
 
-        adapter = TrackAdapter(sharedPreferences) { track ->
+        adapter = TrackAdapter({ track -> saveTrackToPreferences(track) }) { track ->
             searchHistory.writeSearchHistory(track)
             Toast.makeText(this, "Трек сохранен в истории", Toast.LENGTH_SHORT).show()
         }
-        historySearchAdapter = TrackAdapter(sharedPreferences) { track ->
+        historySearchAdapter = TrackAdapter({ track -> saveTrackToPreferences(track) }) { track ->
             searchHistory.writeSearchHistory(track)
             Toast.makeText(this, "Трек сохранен в истории", Toast.LENGTH_SHORT).show()
         }
@@ -231,6 +232,13 @@ class SearchActivity : AppCompatActivity() {
         binding.historyRecyclerView.visibility =
             if (text.isNullOrEmpty()) View.VISIBLE else View.GONE
         return if (text.isNullOrEmpty()) View.GONE else View.VISIBLE
+    }
+
+    private fun saveTrackToPreferences(track: Track) {
+        val trackJson = Gson().toJson(track)
+        sharedPreferences.edit()
+            .putString(TrackAdapter.NEW_TRACK_KEY, trackJson)
+            .apply()
     }
 
     companion object {
