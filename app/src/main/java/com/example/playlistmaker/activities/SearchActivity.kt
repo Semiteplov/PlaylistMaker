@@ -114,6 +114,7 @@ class SearchActivity : AppCompatActivity() {
             historySearchAdapter.notifyDataSetChanged()
 
             binding.clearButton.visibility = clearButtonVisibility(text)
+            binding.progressBar.visibility = View.VISIBLE
 
             Debouncer.requestDebounce {
                 getWebRequest(
@@ -142,7 +143,6 @@ class SearchActivity : AppCompatActivity() {
             binding.noTracksImage.visibility = View.GONE
             binding.text.visibility = View.GONE
         }
-        setUpSearchButton()
     }
 
     private fun hideKeyboard() {
@@ -162,14 +162,6 @@ class SearchActivity : AppCompatActivity() {
         adapter.updateTracks(emptyList())
     }
 
-    private fun setUpSearchButton() {
-        binding.search.setOnEditorActionListener { _, _, _ ->
-            clearAdapter()
-            getWebRequest(binding.search.text.toString().trim())
-            false
-        }
-    }
-
     private fun setUpUpdateButton() {
         binding.updateButton.setOnClickListener {
             getWebRequest(
@@ -186,10 +178,12 @@ class SearchActivity : AppCompatActivity() {
                 response: Response<ITunesResponse>
             ) {
                 handleResponse(response)
+                binding.progressBar.visibility = View.GONE
             }
 
             override fun onFailure(call: Call<ITunesResponse>, t: Throwable) {
                 handleFailure()
+                binding.progressBar.visibility = View.GONE
             }
         })
     }

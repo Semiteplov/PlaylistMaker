@@ -10,4 +10,5 @@
     <dimen name="recycler_view_margin">8dp</dimen>
     <dimen name="error_image_layout_size">120dp</dimen>
     <dimen name="padding_normal">22dp</dimen>
+    <dimen name="progressbar_size">44dp</dimen>
 </resources>
