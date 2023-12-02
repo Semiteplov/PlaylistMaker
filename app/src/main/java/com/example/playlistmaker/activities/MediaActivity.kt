@@ -1,10 +1,13 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.activities
 
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.playlistmaker.R
+import com.example.playlistmaker.models.Track
 import com.example.playlistmaker.databinding.ActivityMediaBinding
+import com.example.playlistmaker.utils.loadTrackImage
 import com.google.gson.Gson
 
 class MediaActivity : AppCompatActivity() {

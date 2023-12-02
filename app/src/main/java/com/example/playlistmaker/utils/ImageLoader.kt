@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.utils
 
 import android.content.Context
 import android.util.TypedValue
@@ -8,6 +8,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.example.playlistmaker.R
+import com.example.playlistmaker.models.Track
 
 private const val BORDER_RADIUS = 2.0f
 

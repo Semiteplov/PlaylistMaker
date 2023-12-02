@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.activities
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -9,7 +9,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.playlistmaker.network.ITunesApiService
+import com.example.playlistmaker.network.ITunesResponse
+import com.example.playlistmaker.R
+import com.example.playlistmaker.models.SearchHistory
+import com.example.playlistmaker.models.Track
+import com.example.playlistmaker.adapters.TrackAdapter
 import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.utils.Debouncer
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
@@ -107,6 +114,12 @@ class SearchActivity : AppCompatActivity() {
             historySearchAdapter.notifyDataSetChanged()
 
             binding.clearButton.visibility = clearButtonVisibility(text)
+
+            Debouncer.requestDebounce {
+                getWebRequest(
+                    binding.search.text.toString().trim()
+                )
+            }
         }
         binding.clearButton.setOnClickListener {
             binding.search.text?.clear()
