@@ -31,6 +31,9 @@ data class Track(
 
     @SerializedName("releaseDate")
     val releaseDate: String,
+
+    @SerializedName("previewUrl")
+    val previewUrl: String?,
 ) {
     fun getFormattedTime(): String {
         return SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis)

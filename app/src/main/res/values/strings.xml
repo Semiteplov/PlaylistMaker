@@ -24,4 +24,5 @@
     <string name="artist_name">Имя артиста</string>
     <string name="track_time">trackTime</string>
     <string name="playlist_created">Плэйлист создан</string>
+    <string name="default_track_time">00:00</string>
 </resources>
