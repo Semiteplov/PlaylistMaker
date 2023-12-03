@@ -14,12 +14,6 @@ enum class PlayerState {
     STATE_ERROR,
 }
 
-interface MediaPlayerControlListener {
-    fun onStartPlayer()
-    fun onPausePlayer()
-    fun onTimeUpdate(time: String)
-}
-
 object Player {
     private const val TAG = "Player"
 
@@ -72,7 +66,7 @@ object Player {
         stopTimer()
     }
 
-    fun playbackControl(listener: MediaPlayerControlListener) {
+    fun playbackControl(listener: IMediaPlayerControlListener) {
         when (state) {
             PlayerState.STATE_PLAYING -> {
                 pause { listener.onPausePlayer() }

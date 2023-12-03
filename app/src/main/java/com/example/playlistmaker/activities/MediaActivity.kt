@@ -7,12 +7,12 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityMediaBinding
 import com.example.playlistmaker.models.Track
-import com.example.playlistmaker.services.MediaPlayerControlListener
+import com.example.playlistmaker.services.IMediaPlayerControlListener
 import com.example.playlistmaker.services.Player
 import com.example.playlistmaker.utils.loadTrackImage
 import com.google.gson.Gson
 
-class MediaActivity : AppCompatActivity(), MediaPlayerControlListener {
+class MediaActivity : AppCompatActivity(), IMediaPlayerControlListener {
     private lateinit var binding: ActivityMediaBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

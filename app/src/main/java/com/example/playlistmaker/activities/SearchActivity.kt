@@ -7,6 +7,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.network.ITunesApiService
@@ -114,7 +115,7 @@ class SearchActivity : AppCompatActivity() {
             historySearchAdapter.notifyDataSetChanged()
 
             binding.clearButton.visibility = clearButtonVisibility(text)
-            binding.progressBar.visibility = View.VISIBLE
+            binding.rvProgressBar.isVisible = true
 
             Debouncer.requestDebounce {
                 getWebRequest(
@@ -178,12 +179,12 @@ class SearchActivity : AppCompatActivity() {
                 response: Response<ITunesResponse>
             ) {
                 handleResponse(response)
-                binding.progressBar.visibility = View.GONE
+                binding.rvProgressBar.isVisible = false
             }
 
             override fun onFailure(call: Call<ITunesResponse>, t: Throwable) {
                 handleFailure()
-                binding.progressBar.visibility = View.GONE
+                binding.rvProgressBar.isVisible = false
             }
         })
     }
