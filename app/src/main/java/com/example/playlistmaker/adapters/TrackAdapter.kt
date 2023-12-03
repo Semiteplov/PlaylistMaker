@@ -1,10 +1,15 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.adapters
 
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.R
+import com.example.playlistmaker.models.Track
+import com.example.playlistmaker.activities.MediaActivity
+import com.example.playlistmaker.utils.Debouncer
+import com.example.playlistmaker.viewholders.TrackViewHolder
 import com.google.gson.Gson
 
 class TrackAdapter(
@@ -28,13 +33,15 @@ class TrackAdapter(
 
         holder.bind(track)
         holder.itemView.setOnClickListener {
-            saveTrack(track)
-            onTrackClickListener(track)
-            val trackJson = Gson().toJson(track)
-            val intent = Intent(holder.itemView.context, MediaActivity::class.java).apply {
-                putExtra("key", trackJson)
+            if (Debouncer.clickDebounce()) {
+                saveTrack(track)
+                onTrackClickListener(track)
+                val trackJson = Gson().toJson(track)
+                val intent = Intent(holder.itemView.context, MediaActivity::class.java).apply {
+                    putExtra("key", trackJson)
+                }
+                holder.itemView.context.startActivity(intent)
             }
-            holder.itemView.context.startActivity(intent)
         }
     }
 

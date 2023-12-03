@@ -1,20 +1,37 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.activities
 
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityMediaBinding
+import com.example.playlistmaker.models.Track
+import com.example.playlistmaker.services.IMediaPlayerControlListener
+import com.example.playlistmaker.services.Player
+import com.example.playlistmaker.utils.loadTrackImage
 import com.google.gson.Gson
 
-class MediaActivity : AppCompatActivity() {
+class MediaActivity : AppCompatActivity(), IMediaPlayerControlListener {
     private lateinit var binding: ActivityMediaBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initializeUI()
+        processTrackData()
         setListeners()
-        processIntentData()
+    }
+
+    override fun onStartPlayer() {
+        binding.ibPlay.setImageResource(R.drawable.ic_pause_button)
+    }
+
+    override fun onPausePlayer() {
+        binding.ibPlay.setImageResource(R.drawable.ic_play_button)
+    }
+
+    override fun onTimeUpdate(time: String) {
+        binding.tvTimeTrack.text = time
     }
 
     private fun initializeUI() {
@@ -27,17 +44,25 @@ class MediaActivity : AppCompatActivity() {
         binding.ibLike.setOnClickListener {
             binding.ibLike.setImageResource(R.drawable.ic_like)
             Toast.makeText(
-                this,
-                getString(R.string.playlist_created),
-                Toast.LENGTH_LONG
+                this, getString(R.string.playlist_created), Toast.LENGTH_LONG
             ).show()
+        }
+        binding.ibPlay.setOnClickListener {
+            Player.playbackControl(this)
         }
     }
 
-    private fun processIntentData() {
+    private fun processTrackData() {
         intent.getStringExtra("key")?.let { json ->
             Gson().fromJson(json, Track::class.java)?.let { track ->
                 setUIData(track)
+                if (!track.previewUrl.isNullOrBlank()) {
+                    Player.prepare(track.previewUrl) {
+                        binding.tvTimeTrack.text =
+                            getString(R.string.default_track_time)
+                        onPausePlayer()
+                    }
+                }
             }
         }
     }
@@ -59,6 +84,19 @@ class MediaActivity : AppCompatActivity() {
             tvGenreValue.text = track.primaryGenreName
             ivMain.loadTrackImage(this@MediaActivity, ivMain, track, true)
             tvTimeTrack.text = track.getFormattedTime().replaceFirst("0", "")
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Player.release()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Player.pause {
+            binding.ibPlay.setImageResource(R.drawable.ic_play_button)
+            Player.stopTimer()
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.models
 
 import com.google.gson.annotations.SerializedName
 import java.text.SimpleDateFormat
@@ -31,6 +31,9 @@ data class Track(
 
     @SerializedName("releaseDate")
     val releaseDate: String,
+
+    @SerializedName("previewUrl")
+    val previewUrl: String?,
 ) {
     fun getFormattedTime(): String {
         return SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis)
