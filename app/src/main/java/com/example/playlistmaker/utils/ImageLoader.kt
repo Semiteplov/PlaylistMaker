@@ -9,7 +9,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.example.playlistmaker.R
-import com.example.playlistmaker.models.Track
+import com.example.playlistmaker.domain.models.Track
 
 private const val BORDER_RADIUS = 2.0f
 
@@ -20,7 +20,7 @@ fun ImageView.loadTrackImage(
     useLargeImage: Boolean
 ) {
     Glide.with(context)
-        .load(track.getImageNeedSize())
+        .load(track.artworkUrl100)
         .apply(getRequestOptions(useLargeImage))
         .transform(CenterCrop(), RoundedCorners(dpToPx(BORDER_RADIUS, context)))
         .into(view)
