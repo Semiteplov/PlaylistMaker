@@ -1,4 +1,4 @@
-package com.example.playlistmaker.activities
+package com.example.playlistmaker.presentation.media
 
 import android.os.Bundle
 import android.view.View
@@ -6,7 +6,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityMediaBinding
-import com.example.playlistmaker.models.Track
+import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.services.IMediaPlayerControlListener
 import com.example.playlistmaker.services.Player
 import com.example.playlistmaker.utils.loadTrackImage
@@ -79,11 +79,11 @@ class MediaActivity : AppCompatActivity(), IMediaPlayerControlListener {
             }
 
             tvCountryValue.text = track.country
-            tvYearValue.text = track.getYearFromReleaseDate()
-            tvDurationValue.text = track.getFormattedTime().replaceFirst("0", "")
+            tvYearValue.text = track.releaseDate
+            tvDurationValue.text = track.trackTime.replaceFirst("0", "")
             tvGenreValue.text = track.primaryGenreName
             ivMain.loadTrackImage(this@MediaActivity, ivMain, track, true)
-            tvTimeTrack.text = track.getFormattedTime().replaceFirst("0", "")
+            tvTimeTrack.text = track.trackTime.replaceFirst("0", "")
         }
     }
 

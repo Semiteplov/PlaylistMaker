@@ -1,4 +1,4 @@
-package com.example.playlistmaker.viewholders
+package com.example.playlistmaker.presentation.search
 
 import android.content.Context
 import android.util.TypedValue
@@ -11,7 +11,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.example.playlistmaker.R
-import com.example.playlistmaker.models.Track
+import com.example.playlistmaker.domain.models.Track
 
 class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val artistName: TextView = itemView.findViewById(R.id.artist_name)
@@ -30,7 +30,7 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         trackTitle.text = track.trackTitle
         artistName.text = track.artistName
-        trackTime.text = track.getFormattedTime()
+        trackTime.text = track.trackTime
         Glide.with(itemView)
             .applyDefaultRequestOptions(requestOptions)
             .load(track.artworkUrl100)

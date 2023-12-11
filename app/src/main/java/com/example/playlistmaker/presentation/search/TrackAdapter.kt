@@ -1,4 +1,4 @@
-package com.example.playlistmaker.adapters
+package com.example.playlistmaker.presentation.search
 
 import android.content.Intent
 import android.view.LayoutInflater
@@ -6,10 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import com.example.playlistmaker.models.Track
-import com.example.playlistmaker.activities.MediaActivity
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.presentation.media.MediaActivity
 import com.example.playlistmaker.utils.Debouncer
-import com.example.playlistmaker.viewholders.TrackViewHolder
 import com.google.gson.Gson
 
 class TrackAdapter(

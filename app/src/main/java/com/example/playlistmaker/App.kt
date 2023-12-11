@@ -8,6 +8,7 @@ class App : Application() {
     companion object {
         const val SHARED_PREFERENCES = "shared_preferences"
         const val DARK_THEME_ENABLED = "dark_theme_enabled"
+        const val SAVED_HISTORY = "saved_history"
     }
 
     var isDarkThemeEnabled = false
@@ -15,9 +16,14 @@ class App : Application() {
         getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE)
     }
 
+    private val sharedSavedHistoryPrefs: SharedPreferences by lazy {
+        getSharedPreferences(SAVED_HISTORY, MODE_PRIVATE)
+    }
+
     override fun onCreate() {
         super.onCreate()
         setAppThemeOnAppStart()
+        Creator.init(sharedSavedHistoryPrefs)
     }
 
     fun switchTheme(darkThemeEnabled: Boolean) {
