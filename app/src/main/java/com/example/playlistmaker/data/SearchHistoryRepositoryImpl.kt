@@ -14,8 +14,8 @@ class SearchHistoryRepositoryImpl(private val sharedPreferences: SharedPreferenc
     private val gson: Gson = GsonBuilder().create()
 
     companion object {
-        const val KEY_SEARCH_HISTORY = "key_search_history"
-        const val MAX_HISTORY_SIZE = 10
+        private const val KEY_SEARCH_HISTORY = "key_search_history"
+        private const val MAX_HISTORY_SIZE = 10
     }
 
     override fun saveSearchHistory(track: Track) {

@@ -26,29 +26,29 @@ class SettingsActivity : AppCompatActivity() {
             shareIntent.type = "text/plain"
             shareIntent.putExtra(
                 Intent.EXTRA_TEXT,
-                "https://practicum.yandex.ru/android-developer/?from=catalog"
+                getString(R.string.practicum_catalog_link)
             )
-            startActivity(Intent.createChooser(shareIntent, "Поделиться приложением"))
+            startActivity(Intent.createChooser(shareIntent, getString(R.string.share_app)))
         }
 
         findViewById<Button>(R.id.support_button).setOnClickListener {
             val emailIntent = Intent(Intent.ACTION_SENDTO)
             emailIntent.data = Uri.parse("mailto:")
-            emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("slaviksis@yandex.ru"))
+            emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.slaviksis_yandex_ru)))
             emailIntent.putExtra(
                 Intent.EXTRA_SUBJECT,
-                "Сообщение разработчикам и разработчицам приложения Playlist Maker"
+                getString(R.string.email_subject)
             )
             emailIntent.putExtra(
                 Intent.EXTRA_TEXT,
-                "Спасибо разработчикам и разработчицам за крутое приложение!"
+                getString(R.string.email_text)
             )
             startActivity(emailIntent)
         }
 
         findViewById<Button>(R.id.terms_button).setOnClickListener {
             val browserIntent =
-                Intent(Intent.ACTION_VIEW, Uri.parse("https://yandex.ru/legal/practicum_offer/"))
+                Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.yandex_offer_link)))
             startActivity(browserIntent)
         }
 

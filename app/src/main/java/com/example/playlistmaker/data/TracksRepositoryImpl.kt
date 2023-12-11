@@ -10,13 +10,21 @@ import java.util.Locale
 class TracksRepositoryImpl(
     private val networkClient: NetworkClient,
 ) : TracksRepository {
+    private val trackTimeFormatter by lazy {
+        SimpleDateFormat("mm:ss", Locale.getDefault())
+    }
+
     override fun searchTracks(expression: String): List<Track> {
         val response = networkClient.doRequest(TrackSearchRequest(expression))
         if (response.resultCode == 200) {
             return (response as TrackSearchResponse).results.map {
                 val formattedTrackTime =
-                    SimpleDateFormat("mm:ss", Locale.getDefault()).format(it.trackTimeMillis)
-                val formattedReleaseDate = it.releaseDate.substring(0, 4)
+                    trackTimeFormatter.format(it.trackTimeMillis)
+                val formattedReleaseDate = if (it.releaseDate.length >= 4) {
+                    it.releaseDate.substring(0, 4)
+                } else {
+                    it.releaseDate
+                }
                 val formattedArtworkUrl = it.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
 
                 Track(

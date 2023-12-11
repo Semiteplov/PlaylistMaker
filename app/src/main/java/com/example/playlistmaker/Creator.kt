@@ -1,7 +1,6 @@
 package com.example.playlistmaker
 
 import android.content.SharedPreferences
-import android.util.Log
 import com.example.playlistmaker.data.TracksRepositoryImpl
 import com.example.playlistmaker.data.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.data.network.RetrofitNetworkClient

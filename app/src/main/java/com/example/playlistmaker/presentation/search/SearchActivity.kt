@@ -48,8 +48,8 @@ class SearchActivity : AppCompatActivity() {
         binding.clearHistoryButton.setOnClickListener {
             searchHistoryInteractor.clearSearchHistory()
             historySearchAdapter.clear()
-            binding.historyViewSearch.visibility = View.GONE
-            binding.clearHistoryButton.visibility = View.GONE
+            binding.historyViewSearch.isVisible = false
+            binding.clearHistoryButton.isVisible = false
             historySearchAdapter.notifyDataSetChanged()
         }
 
@@ -74,13 +74,15 @@ class SearchActivity : AppCompatActivity() {
             saveTrackToPreferences(track)
         }) { track ->
             searchHistoryInteractor.saveSearchHistory(track)
-            Toast.makeText(this, "Трек сохранен в истории", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.track_saved_to_history), Toast.LENGTH_SHORT)
+                .show()
         }
         historySearchAdapter = TrackAdapter({ track ->
             saveTrackToPreferences(track)
         }) { track ->
             searchHistoryInteractor.saveSearchHistory(track)
-            Toast.makeText(this, "Трек сохранен в истории", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.track_saved_to_history), Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
@@ -92,8 +94,8 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun updateHistoryVisibility(hasHistory: Boolean) {
-        binding.historyViewSearch.visibility = if (hasHistory) View.VISIBLE else View.GONE
-        binding.clearHistoryButton.visibility = if (hasHistory) View.VISIBLE else View.GONE
+        binding.historyViewSearch.isVisible = hasHistory
+        binding.clearHistoryButton.isVisible = hasHistory
     }
 
     private fun setupUI(savedInstanceState: Bundle?) {
@@ -103,12 +105,10 @@ class SearchActivity : AppCompatActivity() {
             binding.search.setText(savedText)
         }
         binding.search.doOnTextChanged { text, _, _, _ ->
-            binding.historyRecyclerView.visibility =
-                if (binding.search.hasFocus() && text?.isEmpty() == true) View.VISIBLE else View.GONE
-            binding.historyViewSearch.visibility =
-                if (binding.search.hasFocus() && text?.isEmpty() == true) View.VISIBLE else View.GONE
-            binding.clearHistoryButton.visibility =
-                if (binding.search.hasFocus() && text?.isEmpty() == true) View.VISIBLE else View.GONE
+            val showHistory = binding.search.hasFocus() && text?.isEmpty() == true
+            binding.historyRecyclerView.isVisible = showHistory
+            binding.historyViewSearch.isVisible = showHistory
+            binding.clearHistoryButton.isVisible = showHistory
 
             historySearchAdapter.notifyDataSetChanged()
 
@@ -121,7 +121,7 @@ class SearchActivity : AppCompatActivity() {
         }
         binding.clearButton.setOnClickListener {
             binding.search.text?.clear()
-            binding.updateButton.visibility = View.INVISIBLE
+            binding.updateButton.isVisible = false
             hideKeyboard()
             hidePicture()
             clearAdapter()
@@ -131,15 +131,15 @@ class SearchActivity : AppCompatActivity() {
             historySearchAdapter.set(history)
             historySearchAdapter.notifyDataSetChanged()
             if (history.isEmpty()) {
-                binding.historyViewSearch.visibility = View.GONE
-                binding.clearHistoryButton.visibility = View.GONE
+                binding.historyViewSearch.isVisible = false
+                binding.clearHistoryButton.isVisible = false
             } else {
-                binding.historyViewSearch.visibility = View.VISIBLE
-                binding.clearHistoryButton.visibility = View.VISIBLE
+                binding.historyViewSearch.isVisible = true
+                binding.clearHistoryButton.isVisible = true
             }
-            binding.historyRecyclerView.visibility = View.VISIBLE
-            binding.noTracksImage.visibility = View.GONE
-            binding.text.visibility = View.GONE
+            binding.historyRecyclerView.isVisible = true
+            binding.noTracksImage.isVisible = false
+            binding.text.isVisible = false
         }
     }
 
@@ -163,32 +163,32 @@ class SearchActivity : AppCompatActivity() {
     private fun setUpUpdateButton() {
         binding.updateButton.setOnClickListener {
             val query = binding.search.text.toString().trim()
-            if (query.isNotEmpty()) {
-                getTracks(query)
-            }
+            getTracks(query)
         }
     }
 
     private fun getTracks(query: String) {
-        tracksInteractor.searchTracks(query, object : TracksInteractor.TracksConsumer {
-            override fun consume(foundTracks: List<Track>) {
-                runOnUiThread {
-                    if (foundTracks.isNotEmpty()) {
-                        displayTracks(foundTracks)
-                    } else {
-                        displayError()
+        if (query.isNotEmpty()) {
+            tracksInteractor.searchTracks(query, object : TracksInteractor.TracksConsumer {
+                override fun consume(foundTracks: List<Track>) {
+                    runOnUiThread {
+                        if (foundTracks.isNotEmpty()) {
+                            displayTracks(foundTracks)
+                        } else {
+                            displayError()
+                        }
+                        binding.rvProgressBar.isVisible = false
                     }
-                    binding.rvProgressBar.isVisible = false
                 }
-            }
 
-            override fun onError(error: Throwable) {
-                runOnUiThread {
-                    handleFailure()
-                    binding.rvProgressBar.isVisible = false
+                override fun onError(error: Throwable) {
+                    runOnUiThread {
+                        handleFailure()
+                        binding.rvProgressBar.isVisible = false
+                    }
                 }
-            }
-        })
+            })
+        }
     }
 
     private fun displayTracks(trackList: List<Track>) {

@@ -25,4 +25,10 @@
     <string name="track_time">trackTime</string>
     <string name="playlist_created">Плэйлист создан</string>
     <string name="default_track_time">00:00</string>
+    <string name="track_saved_to_history">Трек сохранен в истории</string>
+    <string name="email_subject">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="email_text">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+    <string name="yandex_offer_link">https://yandex.ru/legal/practicum_offer/</string>
+    <string name="practicum_catalog_link">https://practicum.yandex.ru/android-developer/?from=catalog</string>
+    <string name="slaviksis_yandex_ru">slaviksis@yandex.ru</string>
 </resources>
