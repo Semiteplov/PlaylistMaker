@@ -23,7 +23,7 @@
             android:name=".presentation.media.MediaActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.settings.SettingsActivity"
+            android:name=".settings.ui.activity.SettingsActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.main.MainActivity"
