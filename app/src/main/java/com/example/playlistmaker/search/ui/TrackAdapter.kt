@@ -50,9 +50,6 @@ class TrackAdapter(
         tracks = newListTrack
     }
 
-    fun clear() {
-        tracks = emptyList()
-    }
 
     fun updateTracks(newTracks: List<Track>) {
         val diffCallback = TrackDiffCallback(tracks, newTracks)
