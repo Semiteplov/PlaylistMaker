@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.App
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
-import com.example.playlistmaker.presentation.main.MainActivity
+import com.example.playlistmaker.main.ui.activity.MainActivity
 import com.example.playlistmaker.settings.data.impl.ThemeRepositoryImpl
 import com.example.playlistmaker.settings.domain.impl.SettingsInteractorImpl
 import com.example.playlistmaker.settings.ui.view_model.SettingsViewModel
