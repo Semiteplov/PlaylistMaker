@@ -3,7 +3,7 @@ package com.example.playlistmaker.media.ui.view_model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.media.services.IMediaPlayerControlListener
 import com.example.playlistmaker.media.services.Player
 import com.google.gson.Gson

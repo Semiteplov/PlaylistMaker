@@ -1,6 +1,6 @@
-package com.example.playlistmaker.domain.api
+package com.example.playlistmaker.search.domain.api
 
-import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.search.domain.models.Track
 
 interface TracksInteractor {
     fun searchTracks(expression: String, consumer: TracksConsumer)
