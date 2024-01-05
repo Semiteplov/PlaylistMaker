@@ -1,42 +1,49 @@
-package com.example.playlistmaker.presentation.media
+package com.example.playlistmaker.media.ui.activity
 
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityMediaBinding
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.services.IMediaPlayerControlListener
-import com.example.playlistmaker.services.Player
+import com.example.playlistmaker.media.ui.view_model.MediaViewModel
 import com.example.playlistmaker.utils.loadTrackImage
-import com.google.gson.Gson
 
-class MediaActivity : AppCompatActivity(), IMediaPlayerControlListener {
+class MediaActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMediaBinding
+    private lateinit var viewModel: MediaViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initializeUI()
-        processTrackData()
+        binding = ActivityMediaBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        setupViewModel()
         setListeners()
     }
 
-    override fun onStartPlayer() {
-        binding.ibPlay.setImageResource(R.drawable.ic_pause_button)
-    }
+    private fun setupViewModel() {
+        viewModel = ViewModelProvider(this)[MediaViewModel::class.java]
 
-    override fun onPausePlayer() {
-        binding.ibPlay.setImageResource(R.drawable.ic_play_button)
-    }
+        viewModel.track.observe(this) { track ->
+            setUIData(track)
+        }
 
-    override fun onTimeUpdate(time: String) {
-        binding.tvTimeTrack.text = time
-    }
+        viewModel.isPlaying.observe(this) { isPlaying ->
+            if (isPlaying) {
+                binding.ibPlay.setImageResource(R.drawable.ic_pause_button)
+            } else {
+                binding.ibPlay.setImageResource(R.drawable.ic_play_button)
+            }
+        }
 
-    private fun initializeUI() {
-        binding = ActivityMediaBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        viewModel.currentTime.observe(this) { time ->
+            binding.tvTimeTrack.text = time
+        }
+
+        processTrackData()
     }
 
     private fun setListeners() {
@@ -48,22 +55,13 @@ class MediaActivity : AppCompatActivity(), IMediaPlayerControlListener {
             ).show()
         }
         binding.ibPlay.setOnClickListener {
-            Player.playbackControl(this)
+            viewModel.togglePlayback()
         }
     }
 
     private fun processTrackData() {
         intent.getStringExtra("key")?.let { json ->
-            Gson().fromJson(json, Track::class.java)?.let { track ->
-                setUIData(track)
-                if (!track.previewUrl.isNullOrBlank()) {
-                    Player.prepare(track.previewUrl) {
-                        binding.tvTimeTrack.text =
-                            getString(R.string.default_track_time)
-                        onPausePlayer()
-                    }
-                }
-            }
+            viewModel.setTrack(json)
         }
     }
 
@@ -82,21 +80,18 @@ class MediaActivity : AppCompatActivity(), IMediaPlayerControlListener {
             tvYearValue.text = track.releaseDate
             tvDurationValue.text = track.trackTime.replaceFirst("0", "")
             tvGenreValue.text = track.primaryGenreName
-            ivMain.loadTrackImage(this@MediaActivity, ivMain, track, true)
+            loadTrackImage(this@MediaActivity, ivMain, track, true)
             tvTimeTrack.text = track.trackTime.replaceFirst("0", "")
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        Player.release()
+        viewModel.releasePlayer()
     }
 
     override fun onPause() {
         super.onPause()
-        Player.pause {
-            binding.ibPlay.setImageResource(R.drawable.ic_play_button)
-            Player.stopTimer()
-        }
+        viewModel.pausePlayer()
     }
 }

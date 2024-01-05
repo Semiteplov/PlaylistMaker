@@ -13,7 +13,7 @@ import com.example.playlistmaker.domain.models.Track
 
 private const val BORDER_RADIUS = 2.0f
 
-fun ImageView.loadTrackImage(
+fun loadTrackImage(
     context: Context,
     view: ImageView,
     track: Track,

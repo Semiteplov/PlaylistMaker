@@ -1,4 +1,4 @@
-package com.example.playlistmaker.services
+package com.example.playlistmaker.media.services
 
 import android.media.MediaPlayer
 import android.os.Handler
