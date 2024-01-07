@@ -1,4 +1,4 @@
-package com.example.playlistmaker.media.services
+package com.example.playlistmaker.media.data
 
 interface IMediaPlayerControlListener {
     fun onStartPlayer()

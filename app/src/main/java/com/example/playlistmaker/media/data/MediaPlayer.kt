@@ -1,18 +1,10 @@
-package com.example.playlistmaker.media.services
+package com.example.playlistmaker.media.data
 
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import java.util.Locale
-
-enum class PlayerState {
-    STATE_DEFAULT,
-    STATE_PREPARED,
-    STATE_PLAYING,
-    STATE_PAUSED,
-    STATE_ERROR,
-}
 
 object Player {
     private const val TAG = "Player"

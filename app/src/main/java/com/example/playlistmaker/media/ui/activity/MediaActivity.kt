@@ -7,17 +7,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityMediaBinding
-import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.media.ui.view_model.MediaViewModel
+import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.utils.loadTrackImage
 
 class MediaActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMediaBinding
-    private lateinit var viewModel: MediaViewModel
+    private val binding by lazy { ActivityMediaBinding.inflate(layoutInflater) }
+    private val viewModel by lazy { ViewModelProvider(this)[MediaViewModel::class.java] }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMediaBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setupViewModel()
@@ -25,8 +24,6 @@ class MediaActivity : AppCompatActivity() {
     }
 
     private fun setupViewModel() {
-        viewModel = ViewModelProvider(this)[MediaViewModel::class.java]
-
         viewModel.track.observe(this) { track ->
             setUIData(track)
         }

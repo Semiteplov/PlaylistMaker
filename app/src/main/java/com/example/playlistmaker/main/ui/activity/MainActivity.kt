@@ -15,16 +15,18 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        binding.search.setOnClickListener {
-            navigateToSearch()
-        }
+        with(binding) {
+            search.setOnClickListener {
+                navigateToSearch()
+            }
 
-        binding.media.setOnClickListener {
-            navigateToMedia()
-        }
+            media.setOnClickListener {
+                navigateToMedia()
+            }
 
-        binding.settings.setOnClickListener {
-            navigateToSettings()
+            settings.setOnClickListener {
+                navigateToSettings()
+            }
         }
     }
 

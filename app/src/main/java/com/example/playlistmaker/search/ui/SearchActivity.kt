@@ -153,16 +153,16 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun updateSearchUI(text: CharSequence?) {
-        val showHistory =
+        val isHistoryVisible =
             binding.search.hasFocus() && text.isNullOrEmpty() && adapter.tracks.isEmpty()
         with(binding) {
-            historyRecyclerView.isVisible = showHistory
-            historyViewSearch.isVisible = showHistory
-            clearHistoryButton.isVisible = showHistory
+            historyRecyclerView.isVisible = isHistoryVisible
+            historyViewSearch.isVisible = isHistoryVisible
+            clearHistoryButton.isVisible = isHistoryVisible
             clearButton.visibility = clearButtonVisibility(text)
         }
 
-        if (!showHistory) {
+        if (!isHistoryVisible) {
             binding.rvProgressBar.isVisible = true
             Debouncer.requestDebounce {
                 viewModel.searchTracks(binding.search.text.toString().trim())

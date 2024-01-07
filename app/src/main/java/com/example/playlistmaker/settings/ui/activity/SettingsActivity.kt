@@ -16,14 +16,12 @@ import com.example.playlistmaker.sharing.domain.impl.SharingInteractorImpl
 
 class SettingsActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivitySettingsBinding
+    private val binding by lazy { ActivitySettingsBinding.inflate(layoutInflater) }
+
     private lateinit var viewModel: SettingsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySettingsBinding.inflate(layoutInflater).apply {
-            setContentView(root)
-        }
 
         setupViewModel()
         observeViewModel()
