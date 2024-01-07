@@ -1,15 +1,15 @@
 package com.example.playlistmaker
 
 import android.content.SharedPreferences
-import com.example.playlistmaker.data.TracksRepositoryImpl
-import com.example.playlistmaker.data.SearchHistoryRepositoryImpl
-import com.example.playlistmaker.data.network.RetrofitNetworkClient
-import com.example.playlistmaker.domain.api.SearchHistoryInteractor
-import com.example.playlistmaker.domain.api.SearchHistoryRepository
-import com.example.playlistmaker.domain.api.TracksInteractor
-import com.example.playlistmaker.domain.api.TracksRepository
-import com.example.playlistmaker.domain.impl.SearchHistoryInteractorImpl
-import com.example.playlistmaker.domain.impl.TracksInteractorImpl
+import com.example.playlistmaker.search.data.TracksRepositoryImpl
+import com.example.playlistmaker.search.data.SearchHistoryRepositoryImpl
+import com.example.playlistmaker.search.data.network.RetrofitNetworkClient
+import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
+import com.example.playlistmaker.search.domain.api.SearchHistoryRepository
+import com.example.playlistmaker.search.domain.api.TracksInteractor
+import com.example.playlistmaker.search.domain.api.TracksRepository
+import com.example.playlistmaker.search.domain.impl.SearchHistoryInteractorImpl
+import com.example.playlistmaker.search.domain.impl.TracksInteractorImpl
 
 object Creator {
     private lateinit var sharedPreferences: SharedPreferences

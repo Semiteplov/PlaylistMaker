@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:background="?attr/colorPrimaryDark"
     android:padding="16dp"
-    tools:context=".presentation.main.MainActivity">
+    tools:context=".main.ui.activity.MainActivity">
 
     <TextView
         android:layout_width="wrap_content"
