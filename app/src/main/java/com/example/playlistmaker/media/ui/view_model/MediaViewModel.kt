@@ -8,7 +8,7 @@ import com.example.playlistmaker.media.data.IMediaPlayerControlListener
 import com.example.playlistmaker.media.data.Player
 import com.google.gson.Gson
 
-class MediaViewModel : ViewModel() {
+class MediaViewModel(private val player: Player) : ViewModel() {
     private val _track = MutableLiveData<Track>()
     val track: LiveData<Track> = _track
 
@@ -22,14 +22,14 @@ class MediaViewModel : ViewModel() {
         val newTrack = Gson().fromJson(newTrackJson, Track::class.java)
         _track.value = newTrack
         if (!newTrack.previewUrl.isNullOrBlank()) {
-            Player.prepare(newTrack.previewUrl) {
+            player.prepare(newTrack.previewUrl) {
                 _isPlaying.value = false
             }
         }
     }
 
     fun togglePlayback() {
-        Player.playbackControl(object : IMediaPlayerControlListener {
+        player.playbackControl(object : IMediaPlayerControlListener {
             override fun onStartPlayer() {
                 _isPlaying.value = true
             }
@@ -45,13 +45,13 @@ class MediaViewModel : ViewModel() {
     }
 
     fun releasePlayer() {
-        Player.release()
+        player.release()
     }
 
     fun pausePlayer() {
-        Player.pause {
+        player.pause {
             _isPlaying.value = false
-            Player.stopTimer()
+            player.stopTimer()
         }
     }
 }

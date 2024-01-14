@@ -2,6 +2,7 @@ package com.example.playlistmaker
 
 import android.app.Application
 import android.content.SharedPreferences
+import com.example.playlistmaker.media.di.mediaModule
 import com.example.playlistmaker.settings.data.utils.ThemeManager
 import com.example.playlistmaker.settings.di.settingsModule
 import com.example.playlistmaker.settings.domain.api.ThemeRepository
@@ -26,7 +27,7 @@ class App : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@App)
-            modules(sharingModule, settingsModule)
+            modules(sharingModule, settingsModule, mediaModule)
         }
         setAppThemeOnAppStart()
         Creator.init(sharedSavedHistoryPrefs)

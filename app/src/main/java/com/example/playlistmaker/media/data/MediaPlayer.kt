@@ -6,21 +6,18 @@ import android.os.Looper
 import android.util.Log
 import java.util.Locale
 
-object Player {
-    private const val TAG = "Player"
+class Player(private val mediaPlayer: MediaPlayer = MediaPlayer()) {
+    companion object {
+        private const val TAG = "com.example.playlistmaker.media.data.Player"
+        private const val TIMER_TICK_MILLIS = 200L
+    }
 
     private var state = PlayerState.STATE_DEFAULT
-    private var mediaPlayer: MediaPlayer? = MediaPlayer()
     private val handler = Handler(Looper.getMainLooper())
     private var timerRunnable: Runnable? = null
 
-    private const val TIMER_TICK_MILLIS = 200L
-
     fun prepare(mediaUrl: String, onCompletionListener: () -> Unit) {
-        if (mediaPlayer == null) {
-            mediaPlayer = MediaPlayer()
-        }
-        mediaPlayer?.apply {
+        mediaPlayer.apply {
             reset()
             setDataSource(mediaUrl)
             prepareAsync()
@@ -40,20 +37,19 @@ object Player {
     }
 
     private fun start(onStartListener: () -> Unit) {
-        mediaPlayer?.start()
+        mediaPlayer.start()
         onStartListener()
         state = PlayerState.STATE_PLAYING
     }
 
     fun pause(onPauseListener: () -> Unit) {
-        mediaPlayer?.pause()
+        mediaPlayer.pause()
         onPauseListener()
         state = PlayerState.STATE_PAUSED
     }
 
     fun release() {
-        mediaPlayer?.release()
-        mediaPlayer = null
+        mediaPlayer.release()
         state = PlayerState.STATE_DEFAULT
         stopTimer()
     }
@@ -80,7 +76,7 @@ object Player {
         timerRunnable = object : Runnable {
             override fun run() {
                 if (state == PlayerState.STATE_PLAYING) {
-                    val currentPosition = mediaPlayer?.currentPosition ?: 0
+                    val currentPosition = mediaPlayer.currentPosition ?: 0
                     val minutes = (currentPosition / 1000) / 60
                     val seconds = (currentPosition / 1000) % 60
                     val formattedTime =
