@@ -9,11 +9,13 @@ import com.example.playlistmaker.sharing.data.model.EmailData
 class ExternalNavigatorImpl(private val context: Context) : ExternalNavigator {
     override fun shareApp(link: String, title: String) {
         val shareIntent = Intent(Intent.ACTION_SEND)
-        shareIntent.type = "text/plain"
-        shareIntent.putExtra(
-            Intent.EXTRA_TEXT,
-            link
-        )
+        shareIntent.apply {
+            type = "text/plain"
+            putExtra(
+                Intent.EXTRA_TEXT,
+                link
+            )
+        }
         val chooser = Intent.createChooser(shareIntent, title)
         /*
             TODO: Question ???
@@ -37,18 +39,19 @@ class ExternalNavigatorImpl(private val context: Context) : ExternalNavigator {
 
     override fun sendEmail(emailData: EmailData) {
         val emailIntent = Intent(Intent.ACTION_SENDTO)
-        emailIntent.data = Uri.parse("mailto:")
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(emailData.email))
-        emailIntent.putExtra(
-            Intent.EXTRA_SUBJECT,
-            emailData.subject
-        )
-        emailIntent.putExtra(
-            Intent.EXTRA_TEXT,
-            emailData.text
-        )
-        emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-
+        emailIntent.apply {
+            data = Uri.parse("mailto:")
+            putExtra(Intent.EXTRA_EMAIL, arrayOf(emailData.email))
+            putExtra(
+                Intent.EXTRA_SUBJECT,
+                emailData.subject
+            )
+            putExtra(
+                Intent.EXTRA_TEXT,
+                emailData.text
+            )
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
         context.startActivity(emailIntent)
     }
 }
