@@ -27,13 +27,13 @@
             android:layout_height="64dp"/>
 
         <Button
-            android:id="@+id/support_button"
+            android:id="@+id/share_button"
             android:text="@string/share_app"
             android:drawableEnd="@drawable/ic_share"
             style="@style/SettingsButtonStyle" />
 
         <Button
-            android:id="@+id/share_button"
+            android:id="@+id/support_button"
             android:text="@string/support"
             android:drawableEnd="@drawable/ic_support"
             style="@style/SettingsButtonStyle" />

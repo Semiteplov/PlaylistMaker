@@ -3,42 +3,23 @@ package com.example.playlistmaker.settings.ui.activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
-import com.example.playlistmaker.App
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 import com.example.playlistmaker.main.ui.activity.MainActivity
-import com.example.playlistmaker.settings.data.impl.ThemeRepositoryImpl
-import com.example.playlistmaker.settings.domain.impl.SettingsInteractorImpl
 import com.example.playlistmaker.settings.ui.view_model.SettingsViewModel
-import com.example.playlistmaker.sharing.data.impl.ExternalNavigatorImpl
-import com.example.playlistmaker.sharing.data.impl.ResourceProviderImpl
-import com.example.playlistmaker.sharing.domain.impl.SharingInteractorImpl
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivitySettingsBinding.inflate(layoutInflater) }
 
-    private lateinit var viewModel: SettingsViewModel
+    private val viewModel: SettingsViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(binding.root)
 
-        setupViewModel()
         observeViewModel()
         setupListeners()
-    }
-
-    private fun setupViewModel() {
-        val app = application as App
-        val settingsInteractor = SettingsInteractorImpl(ThemeRepositoryImpl(this))
-        val sharingInteractor = SharingInteractorImpl(ExternalNavigatorImpl(this))
-        val resourceProvider = ResourceProviderImpl(this)
-
-        viewModel = ViewModelProvider(
-            this, SettingsViewModel.getViewModelFactory(
-                app, sharingInteractor, settingsInteractor, resourceProvider
-            )
-        )[SettingsViewModel::class.java]
     }
 
     private fun observeViewModel() {

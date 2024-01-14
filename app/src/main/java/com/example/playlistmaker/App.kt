@@ -2,9 +2,13 @@ package com.example.playlistmaker
 
 import android.app.Application
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.settings.data.impl.ThemeRepositoryImpl
-import com.example.playlistmaker.settings.domain.model.ThemeSettings
+import com.example.playlistmaker.settings.data.utils.ThemeManager
+import com.example.playlistmaker.settings.di.settingsModule
+import com.example.playlistmaker.settings.domain.api.ThemeRepository
+import com.example.playlistmaker.sharing.di.sharingModule
+import org.koin.android.ext.android.inject
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 class App : Application() {
 
@@ -15,32 +19,21 @@ class App : Application() {
     private val sharedSavedHistoryPrefs: SharedPreferences by lazy {
         getSharedPreferences(SAVED_HISTORY, MODE_PRIVATE)
     }
-    private lateinit var themeRepository: ThemeRepositoryImpl
+    private val themeRepository: ThemeRepository by inject()
+    private val themeManager: ThemeManager by inject()
 
     override fun onCreate() {
         super.onCreate()
-        themeRepository = ThemeRepositoryImpl(this)
+        startKoin {
+            androidContext(this@App)
+            modules(sharingModule, settingsModule)
+        }
         setAppThemeOnAppStart()
         Creator.init(sharedSavedHistoryPrefs)
     }
 
-    fun switchTheme(darkThemeEnabled: Boolean) {
-        val newSettings = ThemeSettings(darkThemeEnabled)
-        themeRepository.updateThemeSetting(newSettings)
-        applyTheme(darkThemeEnabled)
-    }
-
     private fun setAppThemeOnAppStart() {
         val currentSettings = themeRepository.getThemeSettings()
-        applyTheme(currentSettings.isDarkThemeEnabled)
-    }
-
-    private fun applyTheme(darkThemeEnabled: Boolean) {
-        val mode = if (darkThemeEnabled) {
-            AppCompatDelegate.MODE_NIGHT_YES
-        } else {
-            AppCompatDelegate.MODE_NIGHT_NO
-        }
-        AppCompatDelegate.setDefaultNightMode(mode)
+        themeManager.applyTheme(currentSettings.isDarkThemeEnabled)
     }
 }
