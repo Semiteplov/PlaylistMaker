@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.app.Application
+import com.example.playlistmaker.media.di.mediaModule
 import com.example.playlistmaker.search.di.searchModule
 import com.example.playlistmaker.settings.data.utils.ThemeManager
 import com.example.playlistmaker.settings.di.settingsModule
@@ -18,7 +19,7 @@ class App : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@App)
-            modules(sharingModule, settingsModule, searchModule)
+            modules(sharingModule, settingsModule, searchModule, mediaModule)
         }
         setAppThemeOnAppStart()
     }
