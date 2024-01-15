@@ -5,13 +5,13 @@ import com.example.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.TrackAdapter
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 
-class SearchHistoryRepositoryImpl(private val sharedPreferences: SharedPreferences) :
+class SearchHistoryRepositoryImpl(
+    private val sharedPreferences: SharedPreferences,
+    private val gson: Gson
+) :
     SearchHistoryRepository {
-
-    private val gson: Gson = GsonBuilder().create()
 
     companion object {
         private const val KEY_SEARCH_HISTORY = "key_search_history"
@@ -50,7 +50,7 @@ class SearchHistoryRepositoryImpl(private val sharedPreferences: SharedPreferenc
     }
 
     override fun saveTrackToHistory(track: Track) {
-        val trackJson = Gson().toJson(track)
+        val trackJson = gson.toJson(track)
         sharedPreferences.edit()
             .putString(TrackAdapter.NEW_TRACK_KEY, trackJson)
             .apply()

@@ -8,14 +8,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.view_model.SearchViewModel
 import com.example.playlistmaker.utils.Debouncer
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
     private val binding by lazy { ActivitySearchBinding.inflate(layoutInflater) }
@@ -23,7 +22,7 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var adapter: TrackAdapter
     private lateinit var historySearchAdapter: TrackAdapter
-    private lateinit var viewModel: SearchViewModel
+    private val viewModel: SearchViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,14 +58,6 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setupViewModel() {
-        val tracksInteractor = Creator.provideTracksInteractor()
-        val searchHistoryInteractor = Creator.provideSearchHistoryInteractor()
-        viewModel = ViewModelProvider(
-            this, SearchViewModel.getViewModelFactory(
-                tracksInteractor, searchHistoryInteractor
-            )
-        )[SearchViewModel::class.java]
-
         viewModel.tracks.observe(this) { tracks ->
             displayTracks(tracks)
         }
