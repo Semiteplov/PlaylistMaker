@@ -8,7 +8,7 @@
     tools:context=".settings.ui.activity.SettingsActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/back_button"
+        android:id="@+id/tbBackButton"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:navigationIcon="@drawable/ic_arrow_back"
@@ -20,26 +20,26 @@
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             style="@style/SettingsButtonStyle"
-            android:id="@+id/theme_switcher"
+            android:id="@+id/swThemeSwitcher"
             android:text="@string/dark_theme"
             android:layout_gravity="start"
             android:layout_width="match_parent"
             android:layout_height="64dp"/>
 
         <Button
-            android:id="@+id/share_button"
+            android:id="@+id/btnShare"
             android:text="@string/share_app"
             android:drawableEnd="@drawable/ic_share"
             style="@style/SettingsButtonStyle" />
 
         <Button
-            android:id="@+id/support_button"
+            android:id="@+id/btnSupport"
             android:text="@string/support"
             android:drawableEnd="@drawable/ic_support"
             style="@style/SettingsButtonStyle" />
 
         <Button
-            android:id="@+id/terms_button"
+            android:id="@+id/btnTerms"
             android:text="@string/terms_of_use"
             android:drawableEnd="@drawable/ic_arrow_forward"
             style="@style/SettingsButtonStyle" />

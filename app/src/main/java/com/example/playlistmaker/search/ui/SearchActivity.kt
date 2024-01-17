@@ -20,8 +20,8 @@ class SearchActivity : AppCompatActivity() {
     private val binding by lazy { ActivitySearchBinding.inflate(layoutInflater) }
     private var savedText: String = ""
 
-    private lateinit var adapter: TrackAdapter
-    private lateinit var historySearchAdapter: TrackAdapter
+    private var adapter: TrackAdapter? = null
+    private var historySearchAdapter: TrackAdapter? = null
     private val viewModel: SearchViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,7 +81,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         viewModel.searchHistory.observe(this) { history ->
-            historySearchAdapter.updateTracks(history)
+            historySearchAdapter?.updateTracks(history)
             updateHistoryVisibility(history.isNotEmpty())
         }
     }
@@ -145,7 +145,8 @@ class SearchActivity : AppCompatActivity() {
 
     private fun updateSearchUI(text: CharSequence?) {
         val isHistoryVisible =
-            binding.search.hasFocus() && text.isNullOrEmpty() && adapter.tracks.isEmpty()
+            binding.search.hasFocus() && text.isNullOrEmpty() && (adapter?.tracks?.isEmpty()
+                ?: true)
         with(binding) {
             historyRecyclerView.isVisible = isHistoryVisible
             historyViewSearch.isVisible = isHistoryVisible
@@ -168,7 +169,7 @@ class SearchActivity : AppCompatActivity() {
         hidePicture()
         clearAdapter()
 
-        adapter.updateTracks(emptyList())
+        adapter?.updateTracks(emptyList())
         binding.noTracksImage.isVisible = false
         binding.text.isVisible = false
     }
@@ -187,7 +188,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun clearAdapter() {
-        adapter.updateTracks(emptyList())
+        adapter?.updateTracks(emptyList())
     }
 
     private fun setUpUpdateButton() {
@@ -203,7 +204,7 @@ class SearchActivity : AppCompatActivity() {
             noTracksImage.isVisible = false
             updateButton.isVisible = false
             text.text = ""
-            adapter.updateTracks(trackList)
+            adapter?.updateTracks(trackList)
         }
     }
 

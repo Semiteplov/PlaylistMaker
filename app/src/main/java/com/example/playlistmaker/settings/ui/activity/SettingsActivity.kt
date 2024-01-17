@@ -31,19 +31,19 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         viewModel.themeSettings.observe(this) { settings ->
-            binding.themeSwitcher.isChecked = settings.isDarkThemeEnabled
+            binding.swThemeSwitcher.isChecked = settings.isDarkThemeEnabled
         }
     }
 
     private fun setupListeners() {
         binding.apply {
-            backButton.setOnClickListener { viewModel.backClicked() }
-            themeSwitcher.setOnCheckedChangeListener { _, isChecked ->
+            tbBackButton.setOnClickListener { viewModel.backClicked() }
+            swThemeSwitcher.setOnCheckedChangeListener { _, isChecked ->
                 viewModel.switchTheme(isChecked)
             }
-            shareButton.setOnClickListener { viewModel.shareApp() }
-            supportButton.setOnClickListener { viewModel.sendEmail() }
-            termsButton.setOnClickListener { viewModel.openTerms() }
+            btnShare.setOnClickListener { viewModel.shareApp() }
+            btnSupport.setOnClickListener { viewModel.sendEmail() }
+            btnTerms.setOnClickListener { viewModel.openTerms() }
         }
     }
 }
