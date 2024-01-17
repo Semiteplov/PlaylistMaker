@@ -8,22 +8,21 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.view_model.SearchViewModel
 import com.example.playlistmaker.utils.Debouncer
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
     private val binding by lazy { ActivitySearchBinding.inflate(layoutInflater) }
     private var savedText: String = ""
 
-    private lateinit var adapter: TrackAdapter
-    private lateinit var historySearchAdapter: TrackAdapter
-    private lateinit var viewModel: SearchViewModel
+    private var adapter: TrackAdapter? = null
+    private var historySearchAdapter: TrackAdapter? = null
+    private val viewModel: SearchViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,14 +58,6 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setupViewModel() {
-        val tracksInteractor = Creator.provideTracksInteractor()
-        val searchHistoryInteractor = Creator.provideSearchHistoryInteractor()
-        viewModel = ViewModelProvider(
-            this, SearchViewModel.getViewModelFactory(
-                tracksInteractor, searchHistoryInteractor
-            )
-        )[SearchViewModel::class.java]
-
         viewModel.tracks.observe(this) { tracks ->
             displayTracks(tracks)
         }
@@ -90,7 +81,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         viewModel.searchHistory.observe(this) { history ->
-            historySearchAdapter.updateTracks(history)
+            historySearchAdapter?.updateTracks(history)
             updateHistoryVisibility(history.isNotEmpty())
         }
     }
@@ -154,7 +145,8 @@ class SearchActivity : AppCompatActivity() {
 
     private fun updateSearchUI(text: CharSequence?) {
         val isHistoryVisible =
-            binding.search.hasFocus() && text.isNullOrEmpty() && adapter.tracks.isEmpty()
+            binding.search.hasFocus() && text.isNullOrEmpty() && (adapter?.tracks?.isEmpty()
+                ?: true)
         with(binding) {
             historyRecyclerView.isVisible = isHistoryVisible
             historyViewSearch.isVisible = isHistoryVisible
@@ -177,7 +169,7 @@ class SearchActivity : AppCompatActivity() {
         hidePicture()
         clearAdapter()
 
-        adapter.updateTracks(emptyList())
+        adapter?.updateTracks(emptyList())
         binding.noTracksImage.isVisible = false
         binding.text.isVisible = false
     }
@@ -196,7 +188,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun clearAdapter() {
-        adapter.updateTracks(emptyList())
+        adapter?.updateTracks(emptyList())
     }
 
     private fun setUpUpdateButton() {
@@ -212,7 +204,7 @@ class SearchActivity : AppCompatActivity() {
             noTracksImage.isVisible = false
             updateButton.isVisible = false
             text.text = ""
-            adapter.updateTracks(trackList)
+            adapter?.updateTracks(trackList)
         }
     }
 
