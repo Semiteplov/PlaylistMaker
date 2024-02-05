@@ -7,15 +7,33 @@
     tools:context=".media.ui.activity.MediaActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_media"
+        android:id="@+id/toolbarMedia"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="?attr/actionBarSize"
         app:layout_constraintBottom_toTopOf="@+id/guideline_left"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_arrow_back"
-        app:titleTextColor="@color/back_button" />
+        app:title="@string/media"
+        app:titleTextColor="@color/primary_text" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabIndicatorFullWidth="false"
+        app:tabTextAppearance="@style/TabTextAppearance"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarMedia"
+        app:tabIndicatorColor="@color/primary_text"
+        app:tabTextColor="@color/primary_text"/>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        app:layout_constraintTop_toBottomOf="@id/tabLayout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_left"
@@ -24,7 +42,7 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/guideline_right"
         app:layout_constraintGuide_begin="24dp"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_media" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbarMedia" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_right"
@@ -42,11 +60,12 @@
         android:layout_marginBottom="16dp"
         android:scaleType="centerCrop"
         android:src="@drawable/placeholder"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/tv_track_name"
         app:layout_constraintDimensionRatio="h,16:16"
         app:layout_constraintEnd_toStartOf="@+id/guideline_right"
         app:layout_constraintStart_toStartOf="@+id/guideline_left"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_media" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbarMedia" />
 
     <TextView
         android:id="@+id/tv_track_name"
@@ -58,6 +77,7 @@
         android:textColor="@color/primary_text"
         android:textSize="22sp"
         android:textStyle="bold"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/tv_artist_name"
         app:layout_constraintEnd_toStartOf="@+id/guideline_right"
         app:layout_constraintHorizontal_bias="0.0"
@@ -72,6 +92,7 @@
         android:text="@string/artist_name"
         android:textColor="@color/primary_text"
         android:textSize="14sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/ib_play"
         app:layout_constraintEnd_toStartOf="@+id/guideline_right"
         app:layout_constraintHorizontal_bias="0.0"
@@ -83,6 +104,7 @@
         android:layout_height="wrap_content"
         android:background="@null"
         android:src="@drawable/ic_play_button"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/tv_time_track"
         app:layout_constraintEnd_toStartOf="@+id/guideline_right"
         app:layout_constraintStart_toStartOf="@+id/guideline_left" />
@@ -93,6 +115,7 @@
         android:layout_height="wrap_content"
         android:background="@null"
         android:src="@drawable/ic_add_to_playlist"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/ib_play"
         app:layout_constraintStart_toStartOf="@+id/guideline_left"
         app:layout_constraintTop_toTopOf="@+id/ib_play" />
@@ -104,6 +127,7 @@
         android:layout_height="wrap_content"
         android:background="@null"
         android:src="@drawable/ic_like"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/ib_play"
         app:layout_constraintEnd_toEndOf="@+id/guideline_right"
         app:layout_constraintTop_toTopOf="@+id/ib_play" />
@@ -117,6 +141,7 @@
         android:textColor="@color/primary_text"
         android:textSize="14sp"
         android:layout_marginBottom="8dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/tv_duration"
         app:layout_constraintEnd_toEndOf="@+id/ib_play"
         app:layout_constraintHorizontal_bias="0.473"
@@ -130,6 +155,7 @@
         android:fontFamily="@font/ys_display_regular"
         android:text="@string/country"
         android:textSize="13sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/tv_genre"
         app:layout_constraintVertical_chainStyle="spread_inside" />
@@ -142,6 +168,7 @@
         android:fontFamily="@font/ys_display_regular"
         android:text="@string/genre"
         android:textSize="13sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/tv_country"
         app:layout_constraintStart_toStartOf="@+id/tv_year" />
 
@@ -153,6 +180,7 @@
         android:fontFamily="@font/ys_display_regular"
         android:text="@string/year"
         android:textSize="13sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/tv_genre"
         app:layout_constraintStart_toStartOf="@+id/tv_album" />
 
@@ -164,6 +192,7 @@
         android:fontFamily="@font/ys_display_regular"
         android:text="@string/album"
         android:textSize="13sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/tv_year"
         app:layout_constraintStart_toStartOf="@+id/tv_duration" />
 
@@ -176,6 +205,7 @@
         android:fontFamily="@font/ys_display_regular"
         android:text="@string/duration"
         android:textSize="13sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/tv_album"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintVertical_chainStyle="spread_inside" />
@@ -189,6 +219,7 @@
         android:text="@string/country"
         android:textColor="@color/primary_text"
         android:textSize="13sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/tv_genre_value" />
 
@@ -201,6 +232,7 @@
         android:text="@string/genre"
         android:textColor="@color/primary_text"
         android:textSize="13sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/tv_country_value"
         app:layout_constraintEnd_toEndOf="@+id/tv_year_value" />
 
@@ -213,6 +245,7 @@
         android:text="@string/year"
         android:textColor="@color/primary_text"
         android:textSize="13sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/tv_genre_value"
         app:layout_constraintEnd_toEndOf="@+id/tv_album_value" />
 
@@ -228,6 +261,7 @@
         android:text="@string/album"
         android:textColor="@color/primary_text"
         android:textSize="13sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/tv_year_value"
         app:layout_constraintEnd_toEndOf="@+id/tv_duration_value" />
 
@@ -241,6 +275,7 @@
         android:text="@string/duration"
         android:textColor="@color/primary_text"
         android:textSize="13sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/tv_album_value"
         app:layout_constraintEnd_toEndOf="parent" />
 

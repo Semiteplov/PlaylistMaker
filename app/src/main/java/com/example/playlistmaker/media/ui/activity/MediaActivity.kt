@@ -6,18 +6,31 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityMediaBinding
+import com.example.playlistmaker.media.ui.MediaViewPagerAdapter
 import com.example.playlistmaker.media.ui.view_model.MediaViewModel
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.utils.loadTrackImage
+import com.google.android.material.tabs.TabLayoutMediator
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MediaActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMediaBinding.inflate(layoutInflater) }
     private val viewModel: MediaViewModel by viewModel()
+    private val tabMediator by lazy {
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            when (position) {
+                0 -> tab.text = getString(R.string.favorite_tracks)
+                1 -> tab.text = getString(R.string.playlists)
+            }
+        }
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        binding.viewPager.adapter = MediaViewPagerAdapter(supportFragmentManager, lifecycle)
+        tabMediator.attach()
 
         setupViewModel()
         setListeners()
@@ -85,6 +98,7 @@ class MediaActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         viewModel.releasePlayer()
+        tabMediator.detach()
     }
 
     override fun onPause() {
