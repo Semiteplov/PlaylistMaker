@@ -6,6 +6,7 @@
     android:layout_gravity="top"
     android:paddingTop="48dp"
     android:gravity="center_horizontal"
+    android:background="@color/background"
     android:orientation="vertical">
 
     <ImageView
@@ -19,7 +20,7 @@
     <TextView
         android:id="@+id/tvNoTracks"
         android:layout_width="match_parent"
-        android:layout_height="84dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
