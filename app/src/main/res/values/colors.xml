@@ -20,4 +20,5 @@
     <color name="search_item_title">#000000</color>
     <color name="point">#AEAFB4</color>
     <color name="primary_text">#FF000000</color>
+    <color name="background">#FFFFFFFF</color>
 </resources>

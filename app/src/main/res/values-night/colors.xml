@@ -9,4 +9,5 @@
     <color name="search_item_title">#FFFFFFFF</color>
     <color name="point">#FFFFFFFF</color>
     <color name="primary_text">#FFFFFFFF</color>
+    <color name="background">#1A1B22</color>
 </resources>
