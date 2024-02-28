@@ -5,20 +5,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.playlistmaker.databinding.FragmentMediaBinding
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
 import com.example.playlistmaker.media.ui.view_model.PlaylistsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistsFragment : Fragment() {
     private val playlistsViewModel: PlaylistsViewModel by viewModel()
-    private lateinit var binding: FragmentPlaylistsBinding
+    private var _binding: FragmentPlaylistsBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentPlaylistsBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentPlaylistsBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -29,6 +31,11 @@ class PlaylistsFragment : Fragment() {
         binding.ivNoTracks.visibility = View.VISIBLE
         binding.tvNoPlaylists.visibility = View.VISIBLE
         binding.btnNewPlaylist.visibility = View.VISIBLE
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {

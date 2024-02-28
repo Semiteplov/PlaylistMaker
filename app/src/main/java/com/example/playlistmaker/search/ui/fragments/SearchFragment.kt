@@ -20,7 +20,9 @@ import com.example.playlistmaker.utils.Debouncer
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
-    private val binding by lazy { FragmentSearchBinding.inflate(layoutInflater) }
+    private var _binding: FragmentSearchBinding? = null
+    private val binding get() = _binding!!
+
     private var savedText: String = ""
 
     private var adapter: TrackAdapter? = null
@@ -32,6 +34,7 @@ class SearchFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -139,8 +142,6 @@ class SearchFragment : Fragment() {
     }
 
     private fun setupUI(savedInstanceState: Bundle?) {
-        binding.searchBackButton.setNavigationOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
-
         savedInstanceState?.let {
             savedText = it.getString(getString(R.string.search_text), "")
             binding.search.setText(savedText)
@@ -254,5 +255,10 @@ class SearchFragment : Fragment() {
         binding.historyRecyclerView.visibility =
             if (text.isNullOrEmpty()) View.VISIBLE else View.GONE
         return if (text.isNullOrEmpty()) View.GONE else View.VISIBLE
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

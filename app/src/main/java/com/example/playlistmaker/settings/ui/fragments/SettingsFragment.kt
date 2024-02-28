@@ -10,7 +10,8 @@ import com.example.playlistmaker.settings.ui.view_model.SettingsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsFragment : Fragment() {
-    private val binding by lazy { FragmentSettingsBinding.inflate(layoutInflater) }
+    private var _binding: FragmentSettingsBinding? = null
+    private val binding get() = _binding!!
     private val viewModel: SettingsViewModel by viewModel()
 
     override fun onCreateView(
@@ -18,6 +19,7 @@ class SettingsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -43,5 +45,10 @@ class SettingsFragment : Fragment() {
             btnSupport.setOnClickListener { viewModel.sendEmail() }
             btnTerms.setOnClickListener { viewModel.openTerms() }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

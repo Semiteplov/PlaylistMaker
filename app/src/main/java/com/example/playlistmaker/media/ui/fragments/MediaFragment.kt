@@ -11,21 +11,18 @@ import com.example.playlistmaker.media.ui.MediaViewPagerAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 
 class MediaFragment : Fragment() {
-    private val binding by lazy { FragmentMediaBinding.inflate(layoutInflater) }
-    private val tabMediator by lazy {
-        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            when (position) {
-                0 -> tab.text = getString(R.string.favorite_tracks)
-                1 -> tab.text = getString(R.string.playlists)
-            }
-        }
-    }
+    private var _binding: FragmentMediaBinding? = null
+    private val binding get() = _binding!!
+
+    private lateinit var tabMediator: TabLayoutMediator
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        _binding = FragmentMediaBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -33,13 +30,20 @@ class MediaFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.viewPager.adapter = MediaViewPagerAdapter(childFragmentManager, lifecycle)
+
+        tabMediator = TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            when (position) {
+                0 -> tab.text = getString(R.string.favorite_tracks)
+                1 -> tab.text = getString(R.string.playlists)
+            }
+        }
         tabMediator.attach()
 
-        binding.toolbarMedia.setNavigationOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         tabMediator.detach()
+        _binding = null
     }
 }
