@@ -12,7 +12,7 @@ import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.example.playlistmaker.search.domain.api.TracksRepository
 import com.example.playlistmaker.search.domain.impl.SearchHistoryInteractorImpl
 import com.example.playlistmaker.search.domain.impl.TracksInteractorImpl
-import com.example.playlistmaker.search.view_model.SearchViewModel
+import com.example.playlistmaker.search.ui.view_model.SearchViewModel
 import com.google.gson.GsonBuilder
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel

@@ -6,13 +6,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/background"
-    tools:context=".search.ui.SearchActivity">
+    tools:context=".search.ui.fragments.SearchFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/search_back_button"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:navigationIcon="@drawable/ic_arrow_back"
         app:title="@string/search"
         app:titleTextColor="@color/search_back_button" />
 

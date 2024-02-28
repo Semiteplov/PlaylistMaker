@@ -20,9 +20,6 @@ class SettingsViewModel(
     private val _themeSettings = MutableLiveData<ThemeSettings>()
     val themeSettings: LiveData<ThemeSettings> = _themeSettings
 
-    private val _navigateToMain = MutableLiveData<Boolean>()
-    val navigateToMain: LiveData<Boolean> = _navigateToMain
-
     init {
         loadThemeSettings()
     }
@@ -58,13 +55,5 @@ class SettingsViewModel(
         _themeSettings.value = newSettings
 
         themeManager.switchTheme(isDarkThemeEnabled)
-    }
-
-    fun backClicked() {
-        _navigateToMain.value = true
-    }
-
-    fun navigatedToMain() {
-        _navigateToMain.value = false
     }
 }

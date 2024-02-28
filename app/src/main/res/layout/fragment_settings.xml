@@ -11,7 +11,6 @@
         android:id="@+id/tbBackButton"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:navigationIcon="@drawable/ic_arrow_back"
         app:title="@string/settings"
         app:titleTextColor="@color/search_back_button" />
 

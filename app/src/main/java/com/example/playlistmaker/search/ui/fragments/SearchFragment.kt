@@ -1,32 +1,42 @@
-package com.example.playlistmaker.search.ui
+package com.example.playlistmaker.search.ui.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.search.domain.models.Track
-import com.example.playlistmaker.search.view_model.SearchViewModel
+import com.example.playlistmaker.search.ui.TrackAdapter
+import com.example.playlistmaker.search.ui.view_model.SearchViewModel
 import com.example.playlistmaker.utils.Debouncer
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
-    private val binding by lazy { ActivitySearchBinding.inflate(layoutInflater) }
+class SearchFragment : Fragment() {
+    private val binding by lazy { FragmentSearchBinding.inflate(layoutInflater) }
     private var savedText: String = ""
 
     private var adapter: TrackAdapter? = null
     private var historySearchAdapter: TrackAdapter? = null
     private val viewModel: SearchViewModel by viewModel()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         setupViewModel()
         setupAdapters()
@@ -58,21 +68,21 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setupViewModel() {
-        viewModel.tracks.observe(this) { tracks ->
+        viewModel.tracks.observe(viewLifecycleOwner) { tracks ->
             displayTracks(tracks)
         }
 
-        viewModel.isError.observe(this) { isError ->
+        viewModel.isError.observe(viewLifecycleOwner) { isError ->
             if (isError) displayError() else displayTracks(viewModel.tracks.value ?: emptyList())
         }
 
-        viewModel.isNetworkError.observe(this) { isNetworkError ->
+        viewModel.isNetworkError.observe(viewLifecycleOwner) { isNetworkError ->
             if (isNetworkError) {
                 handleNetworkError()
             }
         }
 
-        viewModel.isLoading.observe(this) { isLoading ->
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             with(binding) {
                 rvProgressBar.isVisible = isLoading
                 if (isLoading) hidePicture()
@@ -80,7 +90,7 @@ class SearchActivity : AppCompatActivity() {
 
         }
 
-        viewModel.searchHistory.observe(this) { history ->
+        viewModel.searchHistory.observe(viewLifecycleOwner) { history ->
             historySearchAdapter?.updateTracks(history)
             updateHistoryVisibility(history.isNotEmpty())
         }
@@ -88,13 +98,13 @@ class SearchActivity : AppCompatActivity() {
 
     private fun setupRecyclerViews() {
         binding.trackRecyclerView.apply {
-            layoutManager = LinearLayoutManager(this@SearchActivity)
-            adapter = this@SearchActivity.adapter
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = this@SearchFragment.adapter
         }
 
         binding.historyRecyclerView.apply {
-            layoutManager = LinearLayoutManager(this@SearchActivity)
-            adapter = this@SearchActivity.historySearchAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = this@SearchFragment.historySearchAdapter
         }
     }
 
@@ -103,14 +113,22 @@ class SearchActivity : AppCompatActivity() {
             viewModel.saveTrackToHistory(track)
         }) { track ->
             viewModel.saveSearchHistory(track)
-            Toast.makeText(this, getString(R.string.track_saved_to_history), Toast.LENGTH_SHORT)
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.track_saved_to_history),
+                Toast.LENGTH_SHORT
+            )
                 .show()
         }
         historySearchAdapter = TrackAdapter({ track ->
             viewModel.saveTrackToHistory(track)
         }) { track ->
             viewModel.saveSearchHistory(track)
-            Toast.makeText(this, getString(R.string.track_saved_to_history), Toast.LENGTH_SHORT)
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.track_saved_to_history),
+                Toast.LENGTH_SHORT
+            )
                 .show()
         }
     }
@@ -121,7 +139,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setupUI(savedInstanceState: Bundle?) {
-        binding.searchBackButton.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
+        binding.searchBackButton.setNavigationOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
 
         savedInstanceState?.let {
             savedText = it.getString(getString(R.string.search_text), "")
@@ -175,9 +193,10 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun hideKeyboard() {
-        val view = currentFocus
+        val view = requireActivity().currentFocus
         if (view != null) {
-            val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val inputManager =
+                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputManager.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
@@ -226,8 +245,8 @@ class SearchActivity : AppCompatActivity() {
             noTracksImage.isVisible = true
             text.isVisible = true
             updateButton.isVisible = true
-            text.text = getString(R.string.network_error)
-            noTracksImage.setImageResource(R.drawable.ic_network_error)
+            text.text = getString(com.example.playlistmaker.R.string.network_error)
+            noTracksImage.setImageResource(com.example.playlistmaker.R.drawable.ic_network_error)
         }
     }
 
