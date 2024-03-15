@@ -14,10 +14,10 @@ class TracksRepositoryImpl(
         SimpleDateFormat("mm:ss", Locale.getDefault())
     }
 
-    override fun searchTracks(expression: String): List<Track> {
+    override suspend fun searchTracks(expression: String): List<Track> {
         val response = networkClient.doRequest(TrackSearchRequest(expression))
-        if (response.resultCode == 200) {
-            return (response as TrackSearchResponse).results.map {
+        return if (response.resultCode == 200) {
+            (response as TrackSearchResponse).results.map {
                 val formattedTrackTime =
                     trackTimeFormatter.format(it.trackTimeMillis)
                 val formattedReleaseDate = if (it.releaseDate.length >= 4) {
@@ -41,7 +41,7 @@ class TracksRepositoryImpl(
                 )
             }
         } else {
-            return emptyList()
+            emptyList()
         }
     }
 }

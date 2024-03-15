@@ -3,10 +3,14 @@ package com.example.playlistmaker.search.ui.view_model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.utils.Debouncer
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SearchViewModel(
     private val tracksInteractor: TracksInteractor,
@@ -31,9 +35,18 @@ class SearchViewModel(
         if (query.isNotEmpty()) {
             _isLoading.value = true
             Debouncer.requestDebounce {
-                tracksInteractor.searchTracks(query, object : TracksInteractor.TracksConsumer {
-                    override fun consume(foundTracks: List<Track>) {
-                        _isLoading.postValue(false)
+                viewModelScope.launch {
+                    val result = try {
+                        val foundTracks = withContext(Dispatchers.IO) {
+                            tracksInteractor.searchTracks(query)
+                        }
+                        Result.success(foundTracks)
+                    } catch (e: Exception) {
+                        Result.failure(e)
+                    }
+
+                    _isLoading.postValue(false)
+                    result.onSuccess { foundTracks ->
                         if (foundTracks.isNotEmpty()) {
                             _tracks.postValue(foundTracks)
                             _isError.postValue(false)
@@ -41,13 +54,11 @@ class SearchViewModel(
                         } else {
                             _isError.postValue(true)
                         }
-                    }
-
-                    override fun onError(error: Throwable) {
+                    }.onFailure {
                         _isLoading.postValue(false)
                         _isNetworkError.postValue(true)
                     }
-                })
+                }
             }
         } else {
             _isLoading.value = false
