@@ -6,8 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
+import com.example.playlistmaker.media.ui.activity.PlayerActivity
+import com.example.playlistmaker.media.ui.fragments.MediaFragment
 import com.example.playlistmaker.search.domain.models.Track
-import com.example.playlistmaker.media.ui.activity.MediaActivity
 import com.example.playlistmaker.utils.Debouncer
 import com.google.gson.Gson
 
@@ -36,7 +37,7 @@ class TrackAdapter(
                 saveTrack(track)
                 onTrackClickListener(track)
                 val trackJson = Gson().toJson(track)
-                val intent = Intent(holder.itemView.context, MediaActivity::class.java).apply {
+                val intent = Intent(holder.itemView.context, PlayerActivity::class.java).apply {
                     putExtra("key", trackJson)
                 }
                 holder.itemView.context.startActivity(intent)

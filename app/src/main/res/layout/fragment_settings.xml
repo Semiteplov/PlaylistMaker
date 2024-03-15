@@ -5,13 +5,12 @@
     style="@style/MatchParentLayoutStyle"
     android:orientation="vertical"
     android:background="@color/background"
-    tools:context=".settings.ui.activity.SettingsActivity">
+    tools:context=".settings.ui.fragments.SettingsFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/tbBackButton"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:navigationIcon="@drawable/ic_arrow_back"
         app:title="@string/settings"
         app:titleTextColor="@color/search_back_button" />
 
