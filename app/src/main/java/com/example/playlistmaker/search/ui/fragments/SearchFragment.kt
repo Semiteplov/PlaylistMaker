@@ -2,6 +2,7 @@ package com.example.playlistmaker.search.ui.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -174,9 +175,9 @@ class SearchFragment : Fragment() {
         }
 
         if (!isHistoryVisible) {
-            binding.rvProgressBar.isVisible = true
             Debouncer.requestDebounce {
                 viewModel.searchTracks(binding.search.text.toString().trim())
+                binding.rvProgressBar.isVisible = true
             }
         }
     }

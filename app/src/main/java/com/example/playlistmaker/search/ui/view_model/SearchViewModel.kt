@@ -1,5 +1,6 @@
 package com.example.playlistmaker.search.ui.view_model
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,6 +10,8 @@ import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.utils.Debouncer
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -32,32 +35,29 @@ class SearchViewModel(
     val searchHistory: LiveData<List<Track>> = _searchHistory
 
     fun searchTracks(query: String) {
-        if (query.isNotEmpty()) {
-            _isLoading.value = true
-            Debouncer.requestDebounce {
-                viewModelScope.launch {
-                    val result = try {
-                        val foundTracks = withContext(Dispatchers.IO) {
-                            tracksInteractor.searchTracks(query)
-                        }
-                        Result.success(foundTracks)
-                    } catch (e: Exception) {
-                        Result.failure(e)
-                    }
+        Log.d("@@@", "query: $query")
 
-                    _isLoading.postValue(false)
-                    result.onSuccess { foundTracks ->
-                        if (foundTracks.isNotEmpty()) {
-                            _tracks.postValue(foundTracks)
-                            _isError.postValue(false)
-                            _isNetworkError.postValue(false)
-                        } else {
-                            _isError.postValue(true)
+        if (query.isNotEmpty()) {
+            viewModelScope.launch {
+                Debouncer.requestDebounce {
+                    tracksInteractor.searchTracks(query)
+                        .onStart {
+                            _isLoading.postValue(true)
                         }
-                    }.onFailure {
-                        _isLoading.postValue(false)
-                        _isNetworkError.postValue(true)
-                    }
+                        .catch { _ ->
+                            _isLoading.postValue(false)
+                            _isNetworkError.postValue(true)
+                        }
+                        .collect { foundTracks ->
+                            _isLoading.postValue(false)
+                            if (foundTracks.isNotEmpty()) {
+                                _tracks.postValue(foundTracks)
+                                _isError.postValue(false)
+                                _isNetworkError.postValue(false)
+                            } else {
+                                _isError.postValue(true)
+                            }
+                        }
                 }
             }
         } else {
@@ -80,5 +80,9 @@ class SearchViewModel(
 
     fun saveSearchHistory(track: Track) {
         searchHistoryInteractor.saveSearchHistory(track)
+    }
+
+    fun clearTracks() {
+        _tracks.postValue(emptyList())
     }
 }

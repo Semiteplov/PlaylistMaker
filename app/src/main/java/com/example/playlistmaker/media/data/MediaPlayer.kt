@@ -10,6 +10,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 import kotlin.coroutines.CoroutineContext
 
 object Player : CoroutineScope {
@@ -18,7 +19,7 @@ object Player : CoroutineScope {
     private var state = PlayerState.STATE_DEFAULT
     private var mediaPlayer: MediaPlayer? = MediaPlayer()
 
-    private const val TIMER_TICK_MILLIS = 200L
+    private const val TIMER_TICK_MILLIS = 300L
     private var timerJob: Job? = null
 
     override val coroutineContext: CoroutineContext
@@ -88,13 +89,13 @@ object Player : CoroutineScope {
         timerJob = launch {
             while (isActive && state == PlayerState.STATE_PLAYING) {
                 val currentPosition = mediaPlayer?.currentPosition ?: 0
-                val minutes = (currentPosition / 1000) / 60
-                val seconds = (currentPosition / 1000) % 60
+                val roundedPosition = currentPosition + 999
+                val minutes = TimeUnit.MILLISECONDS.toMinutes(roundedPosition.toLong())
+                val seconds = TimeUnit.MILLISECONDS.toSeconds(roundedPosition.toLong()) % 60
                 val formattedTime =
                     String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
 
                 setTimerListener(formattedTime)
-
                 delay(TIMER_TICK_MILLIS)
             }
         }

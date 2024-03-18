@@ -27,7 +27,7 @@ object Debouncer : CoroutineScope {
         return clickJob?.isActive == true
     }
 
-    fun requestDebounce(request: () -> Unit) {
+    fun requestDebounce(request: suspend () -> Unit) {
         searchJob?.cancel()
         searchJob = launch {
             delay(SEARCH_DEBOUNCE_DELAY_MILLIS)
