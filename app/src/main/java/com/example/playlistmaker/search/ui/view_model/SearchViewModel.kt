@@ -34,10 +34,12 @@ class SearchViewModel(
     private val _searchHistory = MutableLiveData<List<Track>>()
     val searchHistory: LiveData<List<Track>> = _searchHistory
 
-    fun searchTracks(query: String) {
-        Log.d("@@@", "query: $query")
+    private val _uiState = MutableLiveData<UIState>()
+    val uiState: LiveData<UIState> = _uiState
 
+    fun searchTracks(query: String) {
         if (query.isNotEmpty()) {
+            _uiState.value = UIState.Search
             viewModelScope.launch {
                 Debouncer.requestDebounce {
                     tracksInteractor.searchTracks(query)
@@ -66,6 +68,7 @@ class SearchViewModel(
     }
 
     fun loadSearchHistory() {
+        _uiState.value = UIState.History
         _searchHistory.value = searchHistoryInteractor.getSearchHistory()
     }
 

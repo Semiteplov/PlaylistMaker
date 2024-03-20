@@ -1,5 +1,6 @@
 package com.example.playlistmaker.search.data
 
+import android.util.Log
 import com.example.playlistmaker.search.data.dto.TrackSearchRequest
 import com.example.playlistmaker.search.data.dto.TrackSearchResponse
 import com.example.playlistmaker.search.domain.api.TracksRepository
@@ -49,7 +50,8 @@ class TracksRepositoryImpl(
         } else {
             emit(emptyList())
         }
-    }.catch { _ ->
+    }.catch { error ->
+        Log.e("TrackRepositoryImpl", "searchTracks error: $error")
         emit(emptyList())
     }
 }

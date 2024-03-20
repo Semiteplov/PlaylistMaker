@@ -17,6 +17,7 @@ import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.TrackAdapter
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
+import com.example.playlistmaker.search.ui.view_model.UIState
 import com.example.playlistmaker.utils.Debouncer
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -98,6 +99,19 @@ class SearchFragment : Fragment() {
             historySearchAdapter?.updateTracks(history)
             updateHistoryVisibility(history.isNotEmpty())
         }
+
+        viewModel.uiState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is UIState.Search -> {
+                    binding.trackRecyclerView.isVisible = true
+                    binding.historyRecyclerView.isVisible = false
+                }
+                is UIState.History -> {
+                    binding.trackRecyclerView.isVisible = false
+                    binding.historyRecyclerView.isVisible = true
+                }
+            }
+        }
     }
 
     private fun setupRecyclerViews() {
@@ -174,7 +188,7 @@ class SearchFragment : Fragment() {
             clearButton.visibility = clearButtonVisibility(text)
         }
 
-        if (!isHistoryVisible) {
+        if (!isHistoryVisible && binding.search.hasFocus()) {
             Debouncer.requestDebounce {
                 viewModel.searchTracks(binding.search.text.toString().trim())
                 binding.rvProgressBar.isVisible = true
