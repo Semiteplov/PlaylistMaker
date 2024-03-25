@@ -61,6 +61,8 @@ object Player : CoroutineScope {
     }
 
     fun release() {
+        Log.d(TAG, "Release timer")
+
         mediaPlayer?.release()
         mediaPlayer = null
         state = PlayerState.STATE_DEFAULT
@@ -102,6 +104,7 @@ object Player : CoroutineScope {
     }
 
     fun stopTimer() {
+        Log.d(TAG, "Stop timer")
         timerJob?.cancel()
     }
 }

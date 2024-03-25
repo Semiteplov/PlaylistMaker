@@ -24,6 +24,7 @@ class PlayerViewModel(private val player: Player, private val gson: Gson) : View
         if (!newTrack.previewUrl.isNullOrBlank()) {
             player.prepare(newTrack.previewUrl) {
                 _isPlaying.value = false
+                _currentTime.value = "00:00"
             }
         }
     }

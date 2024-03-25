@@ -77,16 +77,6 @@ class SearchFragment : Fragment() {
             displayTracks(tracks)
         }
 
-        viewModel.isError.observe(viewLifecycleOwner) { isError ->
-            if (isError) displayError() else displayTracks(viewModel.tracks.value ?: emptyList())
-        }
-
-        viewModel.isNetworkError.observe(viewLifecycleOwner) { isNetworkError ->
-            if (isNetworkError) {
-                handleNetworkError()
-            }
-        }
-
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             with(binding) {
                 rvProgressBar.isVisible = isLoading
@@ -109,6 +99,12 @@ class SearchFragment : Fragment() {
                 is UIState.History -> {
                     binding.trackRecyclerView.isVisible = false
                     binding.historyRecyclerView.isVisible = true
+                }
+                is UIState.EmptyResult -> {
+                    displayError()
+                }
+                is UIState.Error -> {
+                    handleNetworkError()
                 }
             }
         }
