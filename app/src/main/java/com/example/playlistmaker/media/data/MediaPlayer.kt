@@ -1,20 +1,29 @@
 package com.example.playlistmaker.media.data
 
 import android.media.MediaPlayer
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import java.util.Locale
+import java.util.concurrent.TimeUnit
+import kotlin.coroutines.CoroutineContext
 
-object Player {
+object Player : CoroutineScope {
     private const val TAG = "Player"
 
     private var state = PlayerState.STATE_DEFAULT
     private var mediaPlayer: MediaPlayer? = MediaPlayer()
-    private val handler = Handler(Looper.getMainLooper())
-    private var timerRunnable: Runnable? = null
 
-    private const val TIMER_TICK_MILLIS = 200L
+    private const val TIMER_TICK_MILLIS = 300L
+    private var timerJob: Job? = null
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + SupervisorJob()
 
     fun prepare(mediaUrl: String, onCompletionListener: () -> Unit) {
         if (mediaPlayer == null) {
@@ -52,6 +61,8 @@ object Player {
     }
 
     fun release() {
+        Log.d(TAG, "Release timer")
+
         mediaPlayer?.release()
         mediaPlayer = null
         state = PlayerState.STATE_DEFAULT
@@ -77,24 +88,23 @@ object Player {
     }
 
     private fun startTimer(setTimerListener: (String) -> Unit) {
-        timerRunnable = object : Runnable {
-            override fun run() {
-                if (state == PlayerState.STATE_PLAYING) {
-                    val currentPosition = mediaPlayer?.currentPosition ?: 0
-                    val minutes = (currentPosition / 1000) / 60
-                    val seconds = (currentPosition / 1000) % 60
-                    val formattedTime =
-                        String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
+        timerJob = launch {
+            while (isActive && state == PlayerState.STATE_PLAYING) {
+                val currentPosition = mediaPlayer?.currentPosition ?: 0
+                val roundedPosition = currentPosition + 999
+                val minutes = TimeUnit.MILLISECONDS.toMinutes(roundedPosition.toLong())
+                val seconds = TimeUnit.MILLISECONDS.toSeconds(roundedPosition.toLong()) % 60
+                val formattedTime =
+                    String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
 
-                    setTimerListener(formattedTime)
-                    handler.postDelayed(this, TIMER_TICK_MILLIS)
-                }
+                setTimerListener(formattedTime)
+                delay(TIMER_TICK_MILLIS)
             }
         }
-        timerRunnable?.run()
     }
 
     fun stopTimer() {
-        timerRunnable?.let { handler.removeCallbacks(it) }
+        Log.d(TAG, "Stop timer")
+        timerJob?.cancel()
     }
 }

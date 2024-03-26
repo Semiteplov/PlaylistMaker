@@ -2,6 +2,7 @@ package com.example.playlistmaker.search.ui.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.TrackAdapter
 import com.example.playlistmaker.search.ui.view_model.SearchViewModel
+import com.example.playlistmaker.search.ui.view_model.UIState
 import com.example.playlistmaker.utils.Debouncer
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -75,16 +77,6 @@ class SearchFragment : Fragment() {
             displayTracks(tracks)
         }
 
-        viewModel.isError.observe(viewLifecycleOwner) { isError ->
-            if (isError) displayError() else displayTracks(viewModel.tracks.value ?: emptyList())
-        }
-
-        viewModel.isNetworkError.observe(viewLifecycleOwner) { isNetworkError ->
-            if (isNetworkError) {
-                handleNetworkError()
-            }
-        }
-
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             with(binding) {
                 rvProgressBar.isVisible = isLoading
@@ -96,6 +88,25 @@ class SearchFragment : Fragment() {
         viewModel.searchHistory.observe(viewLifecycleOwner) { history ->
             historySearchAdapter?.updateTracks(history)
             updateHistoryVisibility(history.isNotEmpty())
+        }
+
+        viewModel.uiState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is UIState.Search -> {
+                    binding.trackRecyclerView.isVisible = true
+                    binding.historyRecyclerView.isVisible = false
+                }
+                is UIState.History -> {
+                    binding.trackRecyclerView.isVisible = false
+                    binding.historyRecyclerView.isVisible = true
+                }
+                is UIState.EmptyResult -> {
+                    displayError()
+                }
+                is UIState.Error -> {
+                    handleNetworkError()
+                }
+            }
         }
     }
 
@@ -173,10 +184,10 @@ class SearchFragment : Fragment() {
             clearButton.visibility = clearButtonVisibility(text)
         }
 
-        if (!isHistoryVisible) {
-            binding.rvProgressBar.isVisible = true
+        if (!isHistoryVisible && binding.search.hasFocus()) {
             Debouncer.requestDebounce {
                 viewModel.searchTracks(binding.search.text.toString().trim())
+                binding.rvProgressBar.isVisible = true
             }
         }
     }

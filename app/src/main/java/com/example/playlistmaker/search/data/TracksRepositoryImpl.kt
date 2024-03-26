@@ -1,10 +1,15 @@
 package com.example.playlistmaker.search.data
 
+import android.util.Log
 import com.example.playlistmaker.search.data.dto.TrackSearchRequest
 import com.example.playlistmaker.search.data.dto.TrackSearchResponse
 import com.example.playlistmaker.search.domain.api.TracksRepository
 import com.example.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 class TracksRepositoryImpl(
@@ -14,34 +19,39 @@ class TracksRepositoryImpl(
         SimpleDateFormat("mm:ss", Locale.getDefault())
     }
 
-    override fun searchTracks(expression: String): List<Track> {
+    override fun searchTracks(expression: String): Flow<List<Track>> = flow {
         val response = networkClient.doRequest(TrackSearchRequest(expression))
         if (response.resultCode == 200) {
-            return (response as TrackSearchResponse).results.map {
+            val tracks = (response as TrackSearchResponse).results.map { trackSearchResult ->
                 val formattedTrackTime =
-                    trackTimeFormatter.format(it.trackTimeMillis)
-                val formattedReleaseDate = if (it.releaseDate.length >= 4) {
-                    it.releaseDate.substring(0, 4)
+                    trackTimeFormatter.format(Date(trackSearchResult.trackTimeMillis))
+                val formattedReleaseDate = if (trackSearchResult.releaseDate.length >= 4) {
+                    trackSearchResult.releaseDate.substring(0, 4)
                 } else {
-                    it.releaseDate
+                    trackSearchResult.releaseDate
                 }
-                val formattedArtworkUrl = it.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
+                val formattedArtworkUrl =
+                    trackSearchResult.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
 
                 Track(
-                    it.trackTitle,
-                    it.artistName,
+                    trackSearchResult.trackTitle,
+                    trackSearchResult.artistName,
                     formattedTrackTime,
                     formattedArtworkUrl,
-                    it.trackId,
-                    it.primaryGenreName,
-                    it.collectionName,
-                    it.country,
+                    trackSearchResult.trackId,
+                    trackSearchResult.primaryGenreName,
+                    trackSearchResult.collectionName,
+                    trackSearchResult.country,
                     formattedReleaseDate,
-                    it.previewUrl,
+                    trackSearchResult.previewUrl,
                 )
             }
+            emit(tracks)
         } else {
-            return emptyList()
+            emit(emptyList())
         }
+    }.catch { error ->
+        Log.e("TrackRepositoryImpl", "searchTracks error: $error")
+        emit(emptyList())
     }
 }

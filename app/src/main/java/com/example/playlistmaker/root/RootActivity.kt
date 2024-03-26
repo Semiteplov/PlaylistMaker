@@ -20,7 +20,6 @@ class RootActivity : AppCompatActivity() {
 
         binding.bottomNavigationView.apply {
             setupWithNavController(navController)
-            selectedItemId = R.id.mediaFragment
         }
     }
 

@@ -33,7 +33,7 @@ class TrackAdapter(
 
         holder.bind(track)
         holder.itemView.setOnClickListener {
-            if (Debouncer.clickDebounce()) {
+            Debouncer.clickDebounce {
                 saveTrack(track)
                 onTrackClickListener(track)
                 val trackJson = Gson().toJson(track)
