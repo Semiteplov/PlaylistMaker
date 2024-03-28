@@ -26,6 +26,7 @@ class PlayerActivity : AppCompatActivity() {
     private fun setListeners() {
         binding.toolbarPlayer.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
         binding.ibLike.setOnClickListener {
+            viewModel.toggleAddToFavorites()
             binding.ibLike.setImageResource(R.drawable.ic_like)
             Toast.makeText(
                 this, getString(R.string.playlist_created), Toast.LENGTH_LONG
@@ -79,6 +80,12 @@ class PlayerActivity : AppCompatActivity() {
             tvGenreValue.text = track.primaryGenreName
             loadTrackImage(this@PlayerActivity, ivMain, track, true)
             tvTimeTrack.text = track.trackTime.replaceFirst("0", "")
+
+            if (track.isFavorite) {
+                binding.ibLike.setImageResource(R.drawable.ic_liked)
+            } else {
+                binding.ibLike.setImageResource(R.drawable.ic_like)
+            }
         }
     }
 
