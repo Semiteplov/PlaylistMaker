@@ -24,7 +24,7 @@ class TracksRepositoryImpl(
         if (response.resultCode == 200) {
             val tracks = (response as TrackSearchResponse).results.map { trackSearchResult ->
                 val formattedTrackTime =
-                    trackTimeFormatter.format(Date(trackSearchResult.trackTimeMillis))
+                    trackTimeFormatter.format(Date(trackSearchResult.trackTime))
                 val formattedReleaseDate = if (trackSearchResult.releaseDate.length >= 4) {
                     trackSearchResult.releaseDate.substring(0, 4)
                 } else {
@@ -34,11 +34,11 @@ class TracksRepositoryImpl(
                     trackSearchResult.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
 
                 Track(
+                    trackSearchResult.trackId,
                     trackSearchResult.trackTitle,
                     trackSearchResult.artistName,
                     formattedTrackTime,
                     formattedArtworkUrl,
-                    trackSearchResult.trackId,
                     trackSearchResult.primaryGenreName,
                     trackSearchResult.collectionName,
                     trackSearchResult.country,

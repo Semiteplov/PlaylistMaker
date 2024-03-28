@@ -10,7 +10,7 @@ data class TrackDto(
     val artistName: String,
 
     @SerializedName("trackTimeMillis")
-    val trackTimeMillis: Long,
+    val trackTime: Long,
 
     @SerializedName("artworkUrl100")
     val artworkUrl100: String,
