@@ -67,13 +67,19 @@ class PlayerViewModel(
         }
     }
 
-    fun addTrackToFavorites() {
+    fun toggleAddToFavorites() {
         _track.value?.let { track ->
             viewModelScope.launch {
-                track.addedTime = System.currentTimeMillis()
-                favoriteTracksInteractor.addToFavorites(track)
-                track.isFavorite = true
-                _track.postValue(track)
+                if (track.isFavorite) {
+                    favoriteTracksInteractor.deleteFromFavorites(track)
+                    track.isFavorite = false
+                    _track.postValue(track)
+                } else {
+                    track.addedTime = System.currentTimeMillis()
+                    favoriteTracksInteractor.addToFavorites(track)
+                    track.isFavorite = true
+                    _track.postValue(track)
+                }
             }
         }
     }

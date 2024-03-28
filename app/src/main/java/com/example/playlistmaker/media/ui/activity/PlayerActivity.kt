@@ -26,7 +26,7 @@ class PlayerActivity : AppCompatActivity() {
     private fun setListeners() {
         binding.toolbarPlayer.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
         binding.ibLike.setOnClickListener {
-            viewModel.addTrackToFavorites()
+            viewModel.toggleAddToFavorites()
             binding.ibLike.setImageResource(R.drawable.ic_like)
             Toast.makeText(
                 this, getString(R.string.playlist_created), Toast.LENGTH_LONG

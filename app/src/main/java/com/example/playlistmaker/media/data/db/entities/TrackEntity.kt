@@ -16,5 +16,5 @@ data class TrackEntity(
     val country: String,
     val releaseDate: String,
     val previewUrl: String?,
-    val addedTime: Long?
+    val addedTime: Long? = null,
 )
