@@ -10,7 +10,7 @@
     android:paddingTop="48dp">
 
     <ImageView
-        android:id="@+id/ivNoTracks"
+        android:id="@+id/iv_no_tracks"
         android:layout_width="@dimen/error_image_layout_size"
         android:layout_height="@dimen/error_image_layout_size"
         android:contentDescription="@string/no_tracks"
@@ -18,7 +18,7 @@
         app:srcCompat="@drawable/ic_no_tracks" />
 
     <TextView
-        android:id="@+id/tvNoTracks"
+        android:id="@+id/tv_no_tracks"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -34,7 +34,7 @@
         tools:text="text_view" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rcFavoriteTracks"
+        android:id="@+id/rc_favorite_tracks"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
