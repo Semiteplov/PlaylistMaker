@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
+import com.example.playlistmaker.search.domain.api.SearchInteractor
 import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.utils.Debouncer
@@ -14,7 +15,8 @@ import kotlinx.coroutines.launch
 
 class SearchViewModel(
     private val tracksInteractor: TracksInteractor,
-    private val searchHistoryInteractor: SearchHistoryInteractor
+    private val searchHistoryInteractor: SearchHistoryInteractor,
+    private val searchInteractor: SearchInteractor
 ) : ViewModel() {
     private val _tracks = MutableLiveData<List<Track>>()
     val tracks: LiveData<List<Track>> = _tracks
@@ -74,5 +76,9 @@ class SearchViewModel(
 
     fun saveSearchHistory(track: Track) {
         searchHistoryInteractor.saveSearchHistory(track)
+    }
+
+    fun saveTrackForPlaying(track: Track) {
+        searchInteractor.saveTrackForPlaying(track)
     }
 }

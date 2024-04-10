@@ -1,6 +1,5 @@
 package com.example.playlistmaker.search.data
 
-import android.util.Log
 import com.example.playlistmaker.search.data.dto.TrackSearchRequest
 import com.example.playlistmaker.search.data.dto.TrackSearchResponse
 import com.example.playlistmaker.search.domain.api.TracksRepository
@@ -8,23 +7,16 @@ import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class TracksRepositoryImpl(
     private val networkClient: NetworkClient,
 ) : TracksRepository {
-    private val trackTimeFormatter by lazy {
-        SimpleDateFormat("mm:ss", Locale.getDefault())
-    }
+    private var trackForPlaying: Track? = null
 
     override fun searchTracks(expression: String): Flow<List<Track>> = flow {
         val response = networkClient.doRequest(TrackSearchRequest(expression))
         if (response.resultCode == 200) {
             val tracks = (response as TrackSearchResponse).results.map { trackSearchResult ->
-                val formattedTrackTime =
-                    trackTimeFormatter.format(Date(trackSearchResult.trackTime))
                 val formattedReleaseDate = if (trackSearchResult.releaseDate.length >= 4) {
                     trackSearchResult.releaseDate.substring(0, 4)
                 } else {
@@ -37,7 +29,7 @@ class TracksRepositoryImpl(
                     trackSearchResult.trackId,
                     trackSearchResult.trackTitle,
                     trackSearchResult.artistName,
-                    formattedTrackTime,
+                    trackSearchResult.trackTime,
                     formattedArtworkUrl,
                     trackSearchResult.primaryGenreName,
                     trackSearchResult.collectionName,
@@ -50,8 +42,19 @@ class TracksRepositoryImpl(
         } else {
             emit(emptyList())
         }
-    }.catch { error ->
-        Log.e("TrackRepositoryImpl", "searchTracks error: $error")
+    }.catch { _ ->
         emit(emptyList())
+    }
+
+    override fun getTrackForPlaying(): Track? {
+        return trackForPlaying?.let {
+            val copy = trackForPlaying?.copy()
+            trackForPlaying = null
+            copy
+        }
+    }
+
+    override fun saveTrackForPlaying(track: Track?) {
+        trackForPlaying = track
     }
 }

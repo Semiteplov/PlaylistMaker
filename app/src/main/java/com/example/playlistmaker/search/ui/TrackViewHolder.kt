@@ -12,6 +12,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.utils.DateFormatter
 
 class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val artistName: TextView = itemView.findViewById(R.id.artist_name)
@@ -30,7 +31,7 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         trackTitle.text = track.trackTitle
         artistName.text = track.artistName
-        trackTime.text = track.trackTime
+        trackTime.text = DateFormatter.formatMillisToString(track.trackTime)
         Glide.with(itemView)
             .applyDefaultRequestOptions(requestOptions)
             .load(track.artworkUrl100)

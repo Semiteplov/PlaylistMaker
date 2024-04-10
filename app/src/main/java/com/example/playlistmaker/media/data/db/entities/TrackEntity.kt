@@ -1,20 +1,39 @@
 package com.example.playlistmaker.media.data.db.entities
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "track_table")
+@Entity(tableName = "tracks")
 data class TrackEntity(
     @PrimaryKey
-    val trackId: Long,
-    val trackTitle: String,
+    val id: Long,
+
+    @ColumnInfo("track_name")
+    val trackName: String,
+
+    @ColumnInfo("artist_name")
     val artistName: String,
-    val trackTime: String,
+
+    @ColumnInfo("track_time_millis")
+    val trackTimeMillis: Long,
+
+    @ColumnInfo("artwork_url")
     val artworkUrl100: String,
+
+    @ColumnInfo("primary_genre_url")
     val primaryGenreName: String?,
+
+    @ColumnInfo("collection_name")
     val collectionName: String,
+
+    @ColumnInfo("country")
     val country: String,
+
+    @ColumnInfo("release_date")
     val releaseDate: String,
-    val previewUrl: String?,
-    val addedTime: Long? = null,
+
+    @ColumnInfo("preview_url")
+    val previewUrl: String?
 )
+

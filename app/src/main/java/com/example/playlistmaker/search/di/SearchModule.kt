@@ -47,5 +47,5 @@ val searchModule = module {
     single<TracksRepository> { TracksRepositoryImpl(get()) }
     single<TracksInteractor> { TracksInteractorImpl(get()) }
 
-    viewModel { SearchViewModel(get(), get()) }
+    viewModel { SearchViewModel(get(), get(), get()) }
 }

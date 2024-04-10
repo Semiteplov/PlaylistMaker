@@ -10,4 +10,11 @@
     <color name="point">#FFFFFFFF</color>
     <color name="primary_text">#FFFFFFFF</color>
     <color name="background">#1A1B22</color>
+    <color name="text_input_color">#FFFFFFFF</color>
+    <color name="colorTopView">#FFFFFF</color>
+    <color name="colorBottomSheetBackground">#1A1B22</color>
+    <color name="colorBottomSheetOverlay">#99000000</color>
+    <color name="colorStartSearch">#FFFFFFFF</color>
+    <color name="colorNavTabBackground">#1A1B22</color>
+    <color name="colorIconStartSearch">#FF000000</color>
 </resources>
