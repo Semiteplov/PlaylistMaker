@@ -2,7 +2,6 @@ package com.example.playlistmaker.search.ui.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,7 +22,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
-    private val binding get() = _binding!!
+    private val binding get() = _binding
 
     private var savedText: String = ""
 
@@ -35,9 +34,9 @@ class SearchFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
-        return binding.root
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,23 +51,25 @@ class SearchFragment : Fragment() {
 
         viewModel.loadSearchHistory()
 
-        binding.clearHistoryButton.setOnClickListener {
-            viewModel.clearSearchHistory()
-        }
+        if (binding != null) {
+            binding!!.clearHistoryButton.setOnClickListener {
+                viewModel.clearSearchHistory()
+            }
 
-        binding.search.setOnFocusChangeListener { _, hasFocus ->
-            binding.historyRecyclerView.visibility =
-                if (hasFocus && binding.search.text.isEmpty()) View.VISIBLE else View.GONE
-        }
+            binding!!.search.setOnFocusChangeListener { _, hasFocus ->
+                binding!!.historyRecyclerView.visibility =
+                    if (hasFocus && binding!!.search.text.isEmpty()) View.VISIBLE else View.GONE
+            }
 
-        binding.search.setOnFocusChangeListener { _, hasFocus ->
-            binding.clearHistoryButton.visibility =
-                if (hasFocus && binding.search.text.isEmpty()) View.VISIBLE else View.GONE
-        }
+            binding!!.search.setOnFocusChangeListener { _, hasFocus ->
+                binding!!.clearHistoryButton.visibility =
+                    if (hasFocus && binding!!.search.text.isEmpty()) View.VISIBLE else View.GONE
+            }
 
-        binding.search.setOnFocusChangeListener { _, hasFocus ->
-            binding.historyViewSearch.visibility =
-                if (!hasFocus && binding.search.text.isEmpty()) View.VISIBLE else View.GONE
+            binding!!.search.setOnFocusChangeListener { _, hasFocus ->
+                binding!!.historyViewSearch.visibility =
+                    if (!hasFocus && binding!!.search.text.isEmpty()) View.VISIBLE else View.GONE
+            }
         }
     }
 
@@ -78,11 +79,10 @@ class SearchFragment : Fragment() {
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            with(binding) {
+            binding?.apply {
                 rvProgressBar.isVisible = isLoading
                 if (isLoading) hidePicture()
             }
-
         }
 
         viewModel.searchHistory.observe(viewLifecycleOwner) { history ->
@@ -93,12 +93,12 @@ class SearchFragment : Fragment() {
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UIState.Search -> {
-                    binding.trackRecyclerView.isVisible = true
-                    binding.historyRecyclerView.isVisible = false
+                    binding?.trackRecyclerView?.isVisible = true
+                    binding?.historyRecyclerView?.isVisible = false
                 }
                 is UIState.History -> {
-                    binding.trackRecyclerView.isVisible = false
-                    binding.historyRecyclerView.isVisible = true
+                    binding?.trackRecyclerView?.isVisible = false
+                    binding?.historyRecyclerView?.isVisible = true
                 }
                 is UIState.EmptyResult -> {
                     displayError()
@@ -111,12 +111,12 @@ class SearchFragment : Fragment() {
     }
 
     private fun setupRecyclerViews() {
-        binding.trackRecyclerView.apply {
+        binding?.trackRecyclerView?.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = this@SearchFragment.adapter
         }
 
-        binding.historyRecyclerView.apply {
+        binding?.historyRecyclerView?.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = this@SearchFragment.historySearchAdapter
         }
@@ -148,60 +148,60 @@ class SearchFragment : Fragment() {
     }
 
     private fun updateHistoryVisibility(hasHistory: Boolean) {
-        binding.historyViewSearch.isVisible = hasHistory
-        binding.clearHistoryButton.isVisible = hasHistory
+        binding?.historyViewSearch?.isVisible = hasHistory
+        binding?.clearHistoryButton?.isVisible = hasHistory
     }
 
     private fun setupUI(savedInstanceState: Bundle?) {
         savedInstanceState?.let {
             savedText = it.getString(getString(R.string.search_text), "")
-            binding.search.setText(savedText)
+            binding?.search?.setText(savedText)
         }
 
-        binding.search.doOnTextChanged { text, _, _, _ ->
+        binding?.search?.doOnTextChanged { text, _, _, _ ->
             updateSearchUI(text)
             hidePicture()
         }
 
-        binding.clearButton.setOnClickListener {
+        binding?.clearButton?.setOnClickListener {
             clearSearch()
         }
 
-        binding.updateButton.setOnClickListener {
-            val query = binding.search.text.toString().trim()
+        binding?.updateButton?.setOnClickListener {
+            val query = binding?.search?.text.toString().trim()
             viewModel.searchTracks(query)
         }
     }
 
     private fun updateSearchUI(text: CharSequence?) {
         val isHistoryVisible =
-            binding.search.hasFocus() && text.isNullOrEmpty() && (adapter?.tracks?.isEmpty()
-                ?: true)
-        with(binding) {
+            binding?.search?.hasFocus() ?: false && text.isNullOrEmpty() && (adapter?.tracks?.isEmpty()
+                ?: true) && !historySearchAdapter?.tracks.isNullOrEmpty()
+        binding?.apply {
             historyRecyclerView.isVisible = isHistoryVisible
             historyViewSearch.isVisible = isHistoryVisible
             clearHistoryButton.isVisible = isHistoryVisible
             clearButton.visibility = clearButtonVisibility(text)
         }
 
-        if (!isHistoryVisible && binding.search.hasFocus()) {
+        if (!isHistoryVisible && binding?.search?.hasFocus() == true) {
             Debouncer.requestDebounce {
-                viewModel.searchTracks(binding.search.text.toString().trim())
-                binding.rvProgressBar.isVisible = true
+                viewModel.searchTracks(binding?.search?.text.toString().trim())
+                binding?.rvProgressBar?.isVisible = true
             }
         }
     }
 
     private fun clearSearch() {
-        binding.search.text?.clear()
-        binding.updateButton.isVisible = false
+        binding?.search?.text?.clear()
+        binding?.updateButton?.isVisible = false
         hideKeyboard()
         hidePicture()
         clearAdapter()
 
         adapter?.updateTracks(emptyList())
-        binding.noTracksImage.isVisible = false
-        binding.text.isVisible = false
+        binding?.noTracksImage?.isVisible = false
+        binding?.text?.isVisible = false
     }
 
     private fun hideKeyboard() {
@@ -214,8 +214,8 @@ class SearchFragment : Fragment() {
     }
 
     private fun hidePicture() {
-        binding.noTracksImage.visibility = View.INVISIBLE
-        binding.text.visibility = View.INVISIBLE
+        binding?.noTracksImage?.visibility = View.INVISIBLE
+        binding?.text?.visibility = View.INVISIBLE
     }
 
     private fun clearAdapter() {
@@ -223,14 +223,14 @@ class SearchFragment : Fragment() {
     }
 
     private fun setUpUpdateButton() {
-        binding.updateButton.setOnClickListener {
-            val query = binding.search.text.toString().trim()
+        binding?.updateButton?.setOnClickListener {
+            val query = binding?.search?.text.toString().trim()
             viewModel.searchTracks(query)
         }
     }
 
     private fun displayTracks(trackList: List<Track>) {
-        binding.apply {
+        binding?.apply {
             trackRecyclerView.isVisible = true
             noTracksImage.isVisible = false
             updateButton.isVisible = false
@@ -240,7 +240,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun displayError() {
-        binding.apply {
+        binding?.apply {
             trackRecyclerView.isVisible = false
             noTracksImage.isVisible = true
             text.isVisible = true
@@ -252,18 +252,18 @@ class SearchFragment : Fragment() {
     }
 
     private fun handleNetworkError() {
-        with(binding) {
+        binding?.apply {
             trackRecyclerView.isVisible = false
             noTracksImage.isVisible = true
             text.isVisible = true
             updateButton.isVisible = true
-            text.text = getString(com.example.playlistmaker.R.string.network_error)
-            noTracksImage.setImageResource(com.example.playlistmaker.R.drawable.ic_network_error)
+            text.text = getString(R.string.network_error)
+            noTracksImage.setImageResource(R.drawable.ic_network_error)
         }
     }
 
     private fun clearButtonVisibility(text: CharSequence?): Int {
-        binding.historyRecyclerView.visibility =
+        binding?.historyRecyclerView?.visibility =
             if (text.isNullOrEmpty()) View.VISIBLE else View.GONE
         return if (text.isNullOrEmpty()) View.GONE else View.VISIBLE
     }
