@@ -15,8 +15,8 @@
         <item name="iconPadding">@dimen/button_icon_padding</item>
         <item name="iconTint">@color/white</item>
         <item name="android:fontFamily">@font/ys_text_regular</item>
-        <item name="thumbTint">@color/grey</item>
-        <item name="trackTint">@color/grey_light</item>
+        <item name="thumbTint">@color/colorThumbSwitchButton</item>
+        <item name="trackTint">@color/colorTrackSwitchButton</item>
     </style>
     <style name="HistoryButton">
         <item name="cornerRadius">56dp</item>

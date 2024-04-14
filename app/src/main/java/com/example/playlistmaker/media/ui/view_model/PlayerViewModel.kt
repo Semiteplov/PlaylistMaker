@@ -1,86 +1,184 @@
 package com.example.playlistmaker.media.ui.view_model
 
+import android.app.Application
+import android.media.MediaPlayer
+import android.net.Uri
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.media.data.IMediaPlayerControlListener
-import com.example.playlistmaker.media.data.Player
+import com.example.playlistmaker.media.data.PlayerState
+import com.example.playlistmaker.media.domain.PlayerInteractor
 import com.example.playlistmaker.media.domain.db.FavoriteTracksInteractor
-import com.example.playlistmaker.search.domain.models.Track
-import com.google.gson.Gson
+import com.example.playlistmaker.media.domain.db.PlaylistInteractor
+import com.example.playlistmaker.media.domain.models.Playlist
+import com.example.playlistmaker.media.ui.events.PlayerScreenEvent
+import com.example.playlistmaker.media.ui.model.PlayerScreenState
+import com.example.playlistmaker.utils.DateFormatter
+import com.example.playlistmaker.utils.SingleLiveEvent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class PlayerViewModel(
-    private val player: Player,
-    private val gson: Gson,
-    private val favoriteTracksInteractor: FavoriteTracksInteractor
-) : ViewModel() {
-    private val _track = MutableLiveData<Track>()
-    val track: LiveData<Track> = _track
+    private val favoriteTracksInteractor: FavoriteTracksInteractor,
+    private val playlistInteractor: PlaylistInteractor,
+    playerInteractor: PlayerInteractor,
+    application: Application
+) : AndroidViewModel(application) {
 
-    private val _isPlaying = MutableLiveData<Boolean>()
-    val isPlaying: LiveData<Boolean> = _isPlaying
-
-    private val _currentTime = MutableLiveData<String>()
-    val currentTime: LiveData<String> = _currentTime
-
-    fun setTrack(newTrackJson: String) {
-        val newTrack = gson.fromJson(newTrackJson, Track::class.java)
-        viewModelScope.launch {
-            newTrack.isFavorite =
-                favoriteTracksInteractor.isTrackFavorite(newTrack.trackId.toString())
-            _track.postValue(newTrack)
-        }
-        if (!newTrack.previewUrl.isNullOrBlank()) {
-            player.prepare(newTrack.previewUrl) {
-                _isPlaying.value = false
-                _currentTime.value = "00:00"
-            }
-        }
+    companion object {
+        private const val TIME_STEP_MILLIS = 300L
     }
 
-    fun togglePlayback() {
-        player.playbackControl(object : IMediaPlayerControlListener {
-            override fun onStartPlayer() {
-                _isPlaying.value = true
-            }
+    private val mediaPlayer: MediaPlayer = MediaPlayer()
+    private var trackDurationJob: Job? = null
 
-            override fun onPausePlayer() {
-                _isPlaying.value = false
-            }
+    private var track = playerInteractor.getTrackForPlaying()
 
-            override fun onTimeUpdate(time: String) {
-                _currentTime.value = time
-            }
-        })
+    private val _state = MutableLiveData<PlayerScreenState>()
+    val state: LiveData<PlayerScreenState> = _state
+
+    private val _playlists = MutableLiveData<List<Playlist>>(listOf())
+    val playlists: LiveData<List<Playlist>> = _playlists
+
+    val event = SingleLiveEvent<PlayerScreenEvent>()
+
+    init {
+        _state.value = PlayerScreenState(PlayerState.STATE_PAUSED, track)
+        subscribeOnFavoriteTracks()
+        subscribeOnPlaylists()
+        initPlayer()
     }
 
-    fun releasePlayer() {
-        player.release()
+    override fun onCleared() {
+        mediaPlayer.release()
+        super.onCleared()
     }
 
-    fun pausePlayer() {
-        player.pause {
-            _isPlaying.value = false
-            player.stopTimer()
+    fun onPause() = pausePlayer()
+
+    fun onStop() {
+        if (getCurrentScreenState().playerState != PlayerState.STATE_PAUSED) {
+            trackDurationJob?.cancel()
+            mediaPlayer.release()
         }
     }
 
-    fun toggleAddToFavorites() {
-        _track.value?.let { track ->
-            viewModelScope.launch {
-                if (track.isFavorite) {
-                    favoriteTracksInteractor.deleteFromFavorites(track)
-                    track.isFavorite = false
-                    _track.postValue(track)
-                } else {
-                    track.addedTime = System.currentTimeMillis()
-                    favoriteTracksInteractor.addToFavorites(track)
-                    track.isFavorite = true
-                    _track.postValue(track)
+    fun onAddButtonClicked() {
+        event.value = PlayerScreenEvent.OpenPlaylistsBottomSheet
+    }
+
+    fun onPlayButtonClicked() {
+        track?.let {
+            when (getCurrentScreenState().playerState) {
+                PlayerState.STATE_PLAYING -> pausePlayer()
+                PlayerState.STATE_PREPARED, PlayerState.STATE_PAUSED -> startPlayer()
+                else -> {}
+            }
+        }
+    }
+
+    fun onLikeButtonClicked() {
+        viewModelScope.launch(Dispatchers.IO) {
+            track?.apply {
+                if (isFavorite) {
+                    favoriteTracksInteractor.deleteFromFavorites(this)
+                } else favoriteTracksInteractor.addToFavorites(this)
+            }
+        }
+    }
+
+    fun onCreatePlaylistButtonClicked() {
+        event.postValue(PlayerScreenEvent.NavigateToCreatePlaylistScreen)
+    }
+
+    fun onPlaylistClicked(playlist: Playlist) {
+        track?.let {
+            if (it.trackId !in playlist.tracksIds.toSet()) {
+                viewModelScope.launch(Dispatchers.IO) {
+                    playlistInteractor.updatePlaylist(playlist, it)
+                    withContext(Dispatchers.Main) {
+                        event.value = PlayerScreenEvent.ClosePlaylistsBottomSheet
+                        event.value = PlayerScreenEvent.ShowTrackAddedMessage(playlist.name)
+                    }
+                }
+            } else {
+                event.value = PlayerScreenEvent.ShowTrackAlreadyInPlaylistMessage(playlist.name)
+            }
+        }
+    }
+
+    private fun subscribeOnPlaylists() {
+        viewModelScope.launch(Dispatchers.IO) {
+            playlistInteractor.getPlaylists().collect { _playlists.postValue(it) }
+        }
+    }
+
+    private fun pausePlayer() {
+        if (getCurrentScreenState().playerState == PlayerState.STATE_PLAYING) {
+            mediaPlayer.pause()
+            _state.value = getCurrentScreenState().copy(playerState = PlayerState.STATE_PAUSED)
+        }
+    }
+
+    private fun startPlayer() {
+        if (getCurrentScreenState().playerState != PlayerState.STATE_PLAYING) {
+            mediaPlayer.start()
+            trackDurationJob?.cancel()
+            trackDurationJob = viewModelScope.launch {
+                while (mediaPlayer.isPlaying) {
+                    val time =
+                        DateFormatter.formatMillisToString(mediaPlayer.currentPosition.toLong())
+                    _state.postValue(
+                        getCurrentScreenState().copy(
+                            playerState = PlayerState.STATE_PLAYING,
+                            track = track,
+                            trackTime = time
+                        )
+                    )
+                    delay(TIME_STEP_MILLIS)
                 }
             }
         }
     }
+
+    private fun initPlayer() {
+        track?.let {
+            mediaPlayer.apply {
+                setDataSource(getApplication(), Uri.parse(it.previewUrl))
+                prepareAsync()
+                setOnPreparedListener {
+                    _state.value =
+                        getCurrentScreenState().copy(playerState = PlayerState.STATE_PREPARED)
+                }
+                setOnCompletionListener {
+                    _state.value =
+                        getCurrentScreenState().copy(
+                            playerState = PlayerState.STATE_PREPARED,
+                            trackTime = ""
+                        )
+                }
+            }
+        }
+    }
+
+    private fun subscribeOnFavoriteTracks() {
+        viewModelScope.launch(Dispatchers.IO) {
+            favoriteTracksInteractor.getFavoriteTracks().collect { favoriteTracks ->
+                track?.let {
+                    track = it.copy(isFavorite = it.trackId in favoriteTracks.map { track ->
+                        track.trackId
+                    }.toSet())
+                    _state.postValue(
+                        getCurrentScreenState().copy(isFavoriteTrack = track?.isFavorite ?: false)
+                    )
+                }
+            }
+        }
+    }
+
+    private fun getCurrentScreenState() = _state.value ?: PlayerScreenState()
 }

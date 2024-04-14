@@ -12,5 +12,4 @@ class TracksInteractorImpl(
     override fun searchTracks(expression: String): Flow<List<Track>> {
         return repository.searchTracks(expression)
     }
-
 }

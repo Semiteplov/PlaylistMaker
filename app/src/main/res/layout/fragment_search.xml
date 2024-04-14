@@ -28,6 +28,7 @@
             android:drawableStart="@drawable/ic_search_icon_search"
             android:drawablePadding="8dp"
             android:drawableTint="@color/search_hint"
+            android:textCursorDrawable="@drawable/cursor_color"
             android:ems="10"
             android:hint="@string/search"
             android:inputType="text"

@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentMediaBinding
-import com.example.playlistmaker.media.ui.MediaViewPagerAdapter
+import com.example.playlistmaker.media.ui.adapters.MediaViewPagerAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 
 class MediaFragment : Fragment() {

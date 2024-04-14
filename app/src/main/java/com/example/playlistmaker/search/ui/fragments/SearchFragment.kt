@@ -125,8 +125,10 @@ class SearchFragment : Fragment() {
     private fun setupAdapters() {
         adapter = TrackAdapter({ track ->
             viewModel.saveTrackToHistory(track)
+            viewModel.saveTrackForPlaying(track)
         }) { track ->
             viewModel.saveSearchHistory(track)
+            viewModel.saveTrackForPlaying(track)
             Toast.makeText(
                 requireContext(),
                 getString(R.string.track_saved_to_history),
@@ -136,8 +138,10 @@ class SearchFragment : Fragment() {
         }
         historySearchAdapter = TrackAdapter({ track ->
             viewModel.saveTrackToHistory(track)
+            viewModel.saveTrackForPlaying(track)
         }) { track ->
             viewModel.saveSearchHistory(track)
+            viewModel.saveTrackForPlaying(track)
             Toast.makeText(
                 requireContext(),
                 getString(R.string.track_saved_to_history),
