@@ -41,8 +41,8 @@
         <item name="android:paddingBottom">@dimen/vertical_padding</item>
         <item name="android:paddingStart">@dimen/horizontal_padding</item>
         <item name="android:paddingEnd">@dimen/horizontal_padding</item>
-        <item name="thumbTint">@color/grey</item>
-        <item name="trackTint">@color/grey_light</item>
+        <item name="thumbTint">@color/colorThumbSwitchButton</item>
+        <item name="trackTint">@color/colorTrackSwitchButton</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
     </style>
     <style name="SearchItem" parent="Widget.AppCompat.TextView">

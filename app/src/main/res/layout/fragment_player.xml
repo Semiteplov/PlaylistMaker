@@ -293,14 +293,15 @@
             android:layout_height="36dp"
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
-            android:background="@drawable/custom_support"
+            android:background="@drawable/round_background"
             android:fontFamily="@font/ys_display_medium"
             android:foreground="?attr/selectableItemBackground"
             android:lineHeight="16dp"
             android:paddingHorizontal="14dp"
             android:text="@string/new_playlist"
             android:textAllCaps="false"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            app:backgroundTint="@null" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_playlists"

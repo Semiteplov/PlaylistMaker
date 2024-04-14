@@ -154,7 +154,6 @@ class PlayerFragment : Fragment() {
     }
 
     private fun setTrackData(track: Track) {
-        Log.d("PlayerFragment", "setTrackData: $track")
         binding?.apply {
             tvArtistName.text = track.artistName
             tvTrackName.text = track.trackTitle

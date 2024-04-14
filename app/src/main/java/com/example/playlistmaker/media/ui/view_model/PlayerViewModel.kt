@@ -129,7 +129,7 @@ class PlayerViewModel(
             mediaPlayer.start()
             trackDurationJob?.cancel()
             trackDurationJob = viewModelScope.launch {
-                while (mediaPlayer.isPlaying){
+                while (mediaPlayer.isPlaying) {
                     val time =
                         DateFormatter.formatMillisToString(mediaPlayer.currentPosition.toLong())
                     _state.postValue(
@@ -151,7 +151,8 @@ class PlayerViewModel(
                 setDataSource(getApplication(), Uri.parse(it.previewUrl))
                 prepareAsync()
                 setOnPreparedListener {
-                    _state.value = getCurrentScreenState().copy(playerState = PlayerState.STATE_PREPARED)
+                    _state.value =
+                        getCurrentScreenState().copy(playerState = PlayerState.STATE_PREPARED)
                 }
                 setOnCompletionListener {
                     _state.value =

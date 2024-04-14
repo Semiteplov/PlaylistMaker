@@ -2,6 +2,7 @@ package com.example.playlistmaker.media.data.db.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.playlistmaker.search.domain.models.Track
 
 @Entity(tableName = "favorite_tracks")
 data class FavoriteTrackEntity(
@@ -17,4 +18,17 @@ data class FavoriteTrackEntity(
     val releaseDate: String,
     val previewUrl: String?,
     val addedTime: Long? = null,
-)
+) {
+    fun mapToDomain(): Track = Track(
+        trackId,
+        trackTitle,
+        artistName,
+        trackTime,
+        artworkUrl100,
+        primaryGenreName,
+        collectionName,
+        country,
+        releaseDate,
+        previewUrl,
+    )
+}

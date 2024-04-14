@@ -7,5 +7,5 @@ data class PlayerScreenState(
     val playerState: PlayerState = PlayerState.STATE_PREPARED,
     val track: Track? = null,
     val trackTime: String = "",
-    val isFavoriteTrack: Boolean = false
+    var isFavoriteTrack: Boolean = false
 )

@@ -1,5 +1,8 @@
 package com.example.playlistmaker.media.ui.fragments
 
+import android.content.DialogInterface.BUTTON_NEGATIVE
+import android.content.DialogInterface.BUTTON_POSITIVE
+import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +11,7 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.graphics.blue
 import androidx.core.os.bundleOf
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
@@ -106,7 +110,7 @@ class NewPlaylistFragment : Fragment() {
     }
 
     private fun showBackConfirmationDialog() {
-        MaterialAlertDialogBuilder(requireContext())
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle(getString(R.string.confirmation_dialog_title))
             .setMessage(getString(R.string.confirmation_dialog_message))
             .setNegativeButton(getString(R.string.confirmation_dialog_negative)) { dialog, _ ->
@@ -116,6 +120,8 @@ class NewPlaylistFragment : Fragment() {
                 viewModel.onBackPressedConfirmed()
             }
             .show()
+        dialog.getButton(BUTTON_POSITIVE).setTextColor(resources.getColor(R.color.blue))
+        dialog.getButton(BUTTON_NEGATIVE).setTextColor(resources.getColor(R.color.blue))
     }
 
     private fun setSelectedCover(uri: Uri) {

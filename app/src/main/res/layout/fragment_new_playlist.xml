@@ -27,7 +27,8 @@
             android:layout_marginTop="32dp"
             android:hint="@string/playlist_name"
             android:imeOptions="actionNext"
-            app:boxStrokeColor="@color/blue">
+            app:boxStrokeColor="@color/text_input_layout_stroke"
+            app:hintTextColor="@color/blue">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextName"
@@ -45,7 +46,8 @@
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="32dp"
             android:hint="@string/playlist_description"
-            app:boxStrokeColor="@color/blue">
+            app:boxStrokeColor="@color/text_input_layout_stroke"
+            app:hintTextColor="@color/blue">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextDescription"
@@ -75,6 +77,7 @@
         android:layout_marginBottom="32dp"
         android:background="@drawable/bg_create_button"
         android:enabled="false"
+        android:shadowColor="#AEAFB4"
         android:text="@string/playlist_button_text"
         android:textAllCaps="false"
         android:textColor="@color/white"

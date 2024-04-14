@@ -17,4 +17,6 @@
     <color name="colorStartSearch">#FFFFFFFF</color>
     <color name="colorNavTabBackground">#1A1B22</color>
     <color name="colorIconStartSearch">#FF000000</color>
+    <color name="colorTrackSwitchButton">#9FBBF3</color>
+    <color name="colorThumbSwitchButton">#3772E7</color>
 </resources>
